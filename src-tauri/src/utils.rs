@@ -63,7 +63,7 @@ pub fn read_csv_to_waveform(path: &str) -> Result<Waveform, Box<dyn Error>> {
         for record in records {
             let record = record?;
             for (i, field) in record.iter().enumerate() {
-                if let Some(values) = waveform.get_mut(keys.get(i).unwrap_or(&"")) {
+                if let Some(values) = waveform.get_mut(keys.get(i).unwrap_or_default()) {
                     if let Ok(value) = field.parse::<f64>() {
                         values.push(value);
                     }
