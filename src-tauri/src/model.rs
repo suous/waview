@@ -26,6 +26,13 @@ impl Waveform {
     pub fn get_mut(&mut self, key: &str) -> Option<&mut Vec<f64>> {
         self.0.get_mut(key)
     }
+
+    pub fn retain<F>(&mut self, f: F)
+    where
+        F: FnMut(&String, &mut Vec<f64>) -> bool
+    {
+        self.0.retain(f);
+    }
 }
 
 impl From<HashMap<String, Vec<f64>>> for Waveform {
@@ -121,5 +128,19 @@ mod tests {
         waveform.insert("large".to_string(), large_vec.clone());
 
         assert_eq!(waveform.get("large"), Some(&large_vec));
+    }
+
+    #[test]
+    fn test_retain() {
+        let mut waveform = Waveform::new();
+        waveform.insert("key1".to_string(), vec![1.0, 2.0]);
+        waveform.insert("key2".to_string(), vec![3.0, 4.0, 5.0]);
+        waveform.insert("key3".to_string(), vec![5.0, 6.0, 7.0]);
+
+        waveform.retain(|_, values| values.len() > 2);
+
+        assert_eq!(waveform.get("key1"), None);
+        assert_eq!(waveform.get("key2"), Some(&vec![3.0, 4.0, 5.0]));
+        assert_eq!(waveform.get("key3"), Some(&vec![5.0, 6.0, 7.0]));
     }
 }

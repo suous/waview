@@ -46,26 +46,34 @@ fn read_file(path: &str) -> Option<Vec<u8>> {
 }
 
 pub fn read_csv_to_waveform(path: &str) -> Result<Waveform, Box<dyn Error>> {
- 	let csv_data = read_file(path).ok_or("Failed to read file")?;
+    let csv_data = read_file(path).ok_or("Failed to read file")?;
     let mut reader = ReaderBuilder::new()
         .has_headers(false)
         .flexible(true)
         .from_reader(csv_data.as_slice());
 
     let mut waveform = Waveform::new();
+    let mut records = reader.records();
 
-    let keys = reader.records().next().unwrap().unwrap();
-    for key in &keys {
-        waveform.insert(key.to_string(), Vec::new());
-    }
-    for record in reader.records() {
-        let record = record.unwrap();
-        for (i, field) in record.iter().enumerate() {
-            if let Ok(value) = field.parse::<f64>() {
-                waveform.get_mut(&keys[i]).unwrap().push(value);
+    if let Some(Ok(keys)) = records.next() {
+        for key in keys.iter() {
+            waveform.insert(key.to_string(), Vec::new());
+        }
+
+        for record in records {
+            let record = record?;
+            for (i, field) in record.iter().enumerate() {
+                if let Some(values) = waveform.get_mut(keys.get(i).unwrap_or(&"")) {
+                    if let Ok(value) = field.parse::<f64>() {
+                        values.push(value);
+                    }
+                }
             }
         }
+
+        waveform.retain(|_, values| !values.is_empty());
     }
+
     Ok(waveform)
 }
 
