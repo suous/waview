@@ -61,7 +61,9 @@ pub fn read_csv_to_waveform(path: &str) -> Result<Waveform, Box<dyn Error>> {
     for record in reader.records() {
         let record = record.unwrap();
         for (i, field) in record.iter().enumerate() {
-            waveform.get_mut(&keys[i]).unwrap().push(field.parse::<f64>().unwrap());
+            if let Ok(value) = field.parse::<f64>() {
+                waveform.get_mut(&keys[i]).unwrap().push(value);
+            }
         }
     }
     Ok(waveform)
