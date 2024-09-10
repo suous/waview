@@ -28,7 +28,7 @@ import useViewConfig from '../../../stores/View';
 export default function Preference(): JSX.Element {
   const { t, i18n } = useTranslation();
   const { theme, updateTheme } = useViewConfig();
-  const [language, setLanguage] = React.useState('zh');
+  const [language, setLanguage] = React.useState('en');
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -83,7 +83,7 @@ export default function Preference(): JSX.Element {
           {themeOptions.map(({ label, icon: Icon }) => (
             <ToggleButton key={label} value={label} aria-label={`${label} mode`} sx={{ width: 100 }}>
               <Icon />
-              <Typography>{t(label.charAt(0).toUpperCase() + label.slice(1))}</Typography>
+              <Typography variant='inherit'>{t(label.charAt(0).toUpperCase() + label.slice(1))}</Typography>
             </ToggleButton>
           ))}
         </ToggleButtonGroup>

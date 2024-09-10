@@ -95,13 +95,15 @@ export default function ChartConfig({ waveformOption }: { waveformOption: IWavef
         defaultValue={waveformOption.borderWidth}
         sx={{ width: 64 }}
         onChange={handleLineWidthChange}
-        inputProps={{
-          style: {
-            height: 22,
-            paddingTop: 1,
-            paddingBottom: 1,
-            paddingRight: 2,
-            paddingLeft: 5
+        slotProps={{
+          htmlInput: {
+            style: {
+              height: 22,
+              paddingTop: 1,
+              paddingBottom: 1,
+              paddingRight: 2,
+              paddingLeft: 5
+            }
           }
         }}
       />
