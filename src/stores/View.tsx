@@ -20,11 +20,10 @@ function ViewReducer(state: ViewContextType, action: ViewActionType): ViewContex
 }
 
 const ViewContext = React.createContext<ViewContextType>(initialState);
-const useCreateAction = (dispatch: React.Dispatch<ViewActionType>) => createActionCreator<ViewActionType>(dispatch);
 
 export function ViewProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [state, dispatch] = React.useReducer(ViewReducer, initialState);
-  const createAction = useCreateAction(dispatch);
+  const createAction = createActionCreator<ViewActionType>(dispatch);
   const value = {
     ...state,
     updateDrawer: createAction('UPDATE_DRAWER'),

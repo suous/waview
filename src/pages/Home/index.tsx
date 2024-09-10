@@ -30,45 +30,41 @@ export default function Main(): JSX.Element {
       );
       addFiles(files);
       updateOpenedFile(files[0]);
-      updateLoading(true);
       return await invoke('read_csv', { path: paths[0] });
     },
-    [addFiles, updateOpenedFile, updateLoading]
+    [addFiles, updateOpenedFile]
   );
 
-  const disableLoading = React.useCallback(() => {
-    updateLoading(false);
-  }, [updateLoading]);
+  const updateWaveformOptions = React.useCallback(
+    (waveform: IWaveform) => {
+      const channels = Object.keys(waveform);
+      const colorCount = chartConfigs.defaultLineColors.length;
 
-  React.useEffect(() => {
-    const openFile = async (): Promise<void> => {
-      try {
-        const paths = await open({ multiple: true, filters: [{ name: 'transient', extensions: ['csv', 'gz'] }] });
-        if (Array.isArray(paths) && paths.length > 0) {
-          const waveform = await handleFiles(paths);
-          if (waveform) {
-            updateWaveform(waveform);
-            updateWaveformOptions(waveform);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        disableLoading();
+      if (channels.length > colorCount) {
+        chartConfigs.defaultLineColors = [
+          ...chartConfigs.defaultLineColors,
+          ...Array(channels.length - colorCount)
+            .fill(0)
+            .map(() => chartConfigs.defaultLineColors[Math.floor(Math.random() * colorCount)])
+        ];
       }
-    };
 
-    const openPromise = listen('main-open-files', openFile);
-    return () => {
-      openPromise.then(close => close()).catch(console.error);
-    };
-  }, [updateWaveform, disableLoading, handleFiles]);
+      const newWaveformOptions = channels.map((label, index) => ({
+        label,
+        borderColor: chartConfigs.defaultLineColors[index],
+        backgroundColor: chartConfigs.defaultLineColors[index],
+        borderWidth: chartConfigs.defaultLineWidth,
+        lineStyle: chartConfigs.defaultLineStyle
+      }));
+      addWaveformOptions(newWaveformOptions);
+    },
+    [addWaveformOptions]
+  );
 
-  React.useEffect(() => {
-    const handleFileDrop = async (event: { payload: string[] }) => {
-      const paths = event.payload.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
+  const processFiles = React.useCallback(
+    async (paths: string[]) => {
       if (paths.length === 0) return;
-
+      updateLoading(true);
       try {
         const waveform = await handleFiles(paths);
         if (waveform) {
@@ -76,50 +72,44 @@ export default function Main(): JSX.Element {
           updateWaveformOptions(waveform);
         }
       } catch (error) {
-        console.error('Error handling dropped files:', error);
+        console.error('Error processing files:', error);
       } finally {
-        disableLoading();
+        updateLoading(false);
       }
-    };
+    },
+    [handleFiles, updateWaveform, updateWaveformOptions, updateLoading]
+  );
 
-    const dropPromise = listen<string[]>('tauri://file-drop', handleFileDrop);
-    return () => {
-      dropPromise.then(unsubscribe => unsubscribe()).catch(console.error);
-    };
-  }, [disableLoading, updateWaveform, handleFiles]);
+  const handleFileOpen = React.useCallback(async () => {
+    const paths = await open({ multiple: true, filters: [{ name: 'transient', extensions: ['csv', 'gz'] }] });
+    if (Array.isArray(paths)) {
+      await processFiles(paths);
+    }
+  }, [processFiles]);
+
+  const handleFileDrop = React.useCallback(
+    async (event: { payload: string[] }) => {
+      const paths = event.payload.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
+      await processFiles(paths);
+    },
+    [processFiles]
+  );
+
+  const handleWaveformSplit = React.useCallback(() => {
+    updateSplit(!split);
+  }, [split, updateSplit]);
 
   React.useEffect(() => {
-    const waveformSplitListener = listen('main-split-waveforms', () => {
-      updateSplit(!split);
-    });
+    const openPromise = listen('main-open-files', handleFileOpen);
+    const dropPromise = listen<string[]>('tauri://file-drop', handleFileDrop);
+    const splitPromise = listen('main-split-waveforms', handleWaveformSplit);
 
     return () => {
-      waveformSplitListener.then(unsubscribe => unsubscribe()).catch(console.error);
+      openPromise.then(unsubscribe => unsubscribe()).catch(console.error);
+      splitPromise.then(unsubscribe => unsubscribe()).catch(console.error);
+      dropPromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  });
-
-  const updateWaveformOptions = React.useCallback((waveform: IWaveform) => {
-    const channels = Object.keys(waveform);
-    const colorCount = chartConfigs.defaultLineColors.length;
-
-    if (channels.length > colorCount) {
-      chartConfigs.defaultLineColors = [
-        ...chartConfigs.defaultLineColors,
-        ...Array(channels.length - colorCount)
-          .fill(0)
-          .map(() => chartConfigs.defaultLineColors[Math.floor(Math.random() * colorCount)])
-      ];
-    }
-
-    const newWaveformOptions = channels.map((label, index) => ({
-      label,
-      borderColor: chartConfigs.defaultLineColors[index],
-      backgroundColor: chartConfigs.defaultLineColors[index],
-      borderWidth: chartConfigs.defaultLineWidth,
-      lineStyle: chartConfigs.defaultLineStyle
-    }));
-    addWaveformOptions(newWaveformOptions);
-  }, []);
+  }, [split]);
 
   const filteredWaveformOptions = React.useMemo(() => {
     return waveformOptions.filter(option => waveform[option.label]);

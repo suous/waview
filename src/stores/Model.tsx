@@ -56,11 +56,10 @@ function ModelReducer(state: ModelContextType, action: ModelActionType): ModelCo
 }
 
 const ModelContext = React.createContext<ModelContextType>(initialState);
-const useCreateAction = (dispatch: React.Dispatch<ModelActionType>) => createActionCreator<ModelActionType>(dispatch);
 
 export function ModelProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [state, dispatch] = React.useReducer(ModelReducer, initialState);
-  const createAction = useCreateAction(dispatch);
+  const createAction = createActionCreator<ModelActionType>(dispatch);
 
   const value = React.useMemo(
     () => ({
