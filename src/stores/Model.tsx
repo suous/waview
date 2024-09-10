@@ -21,7 +21,12 @@ const initialState: ModelContextType = {
 function ModelReducer(state: ModelContextType, action: ModelActionType): ModelContextType {
   switch (action.type) {
     case 'ADD_FILES':
-      return { ...state, files: [...state.files, ...action.payload] };
+      return {
+        ...state,
+        files: [...state.files, ...action.payload].filter((file, index, self) => {
+          return index === self.findIndex(t => t.path === file.path);
+        })
+      };
     case 'DELETE_FILE':
       return { ...state, files: state.files.filter(file => file.path !== action.payload.path) };
     case 'CLEAR_FILES':
@@ -31,7 +36,12 @@ function ModelReducer(state: ModelContextType, action: ModelActionType): ModelCo
     case 'UPDATE_WAVEFORM':
       return { ...state, waveform: action.payload };
     case 'ADD_WAVEFORM_OPTIONS':
-      return { ...state, waveformOptions: [...state.waveformOptions, ...action.payload] };
+      return {
+        ...state,
+        waveformOptions: [...state.waveformOptions, ...action.payload].filter((option, index, self) => {
+          return index === self.findIndex(t => t.label === option.label);
+        })
+      };
     case 'UPDATE_WAVEFORM_OPTIONS':
       return {
         ...state,

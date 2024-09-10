@@ -31,7 +31,7 @@ export default function Main(): JSX.Element {
       addFiles(files);
       updateOpenedFile(files[0]);
       updateLoading(true);
-      return await invoke('handle_file', { path: paths[0] });
+      return await invoke('read_csv', { path: paths[0] });
     },
     [addFiles, updateOpenedFile, updateLoading]
   );
@@ -43,10 +43,13 @@ export default function Main(): JSX.Element {
   React.useEffect(() => {
     const openFile = async (): Promise<void> => {
       try {
-        const paths = await open({ multiple: true, filters: [{ name: 'transient', extensions: ['csv'] }] });
+        const paths = await open({ multiple: true, filters: [{ name: 'transient', extensions: ['csv', 'gz'] }] });
         if (Array.isArray(paths) && paths.length > 0) {
-          const res = await handleFiles(paths);
-          if (res) updateWaveform(res);
+          const waveform = await handleFiles(paths);
+          if (waveform) {
+            updateWaveform(waveform);
+            updateWaveformOptions(waveform);
+          }
         }
       } catch (error) {
         console.error(error);
@@ -67,8 +70,11 @@ export default function Main(): JSX.Element {
       if (paths.length === 0) return;
 
       try {
-        const res = await handleFiles(paths);
-        if (res) updateWaveform(res);
+        const waveform = await handleFiles(paths);
+        if (waveform) {
+          updateWaveform(waveform);
+          updateWaveformOptions(waveform);
+        }
       } catch (error) {
         console.error('Error handling dropped files:', error);
       } finally {
@@ -92,7 +98,7 @@ export default function Main(): JSX.Element {
     };
   });
 
-  React.useEffect(() => {
+  const updateWaveformOptions = React.useCallback((waveform: IWaveform) => {
     const channels = Object.keys(waveform);
     const colorCount = chartConfigs.defaultLineColors.length;
 
@@ -112,15 +118,18 @@ export default function Main(): JSX.Element {
       borderWidth: chartConfigs.defaultLineWidth,
       lineStyle: chartConfigs.defaultLineStyle
     }));
-
     addWaveformOptions(newWaveformOptions);
-  }, [waveform]);
+  }, []);
+
+  const filteredWaveformOptions = React.useMemo(() => {
+    return waveformOptions.filter(option => waveform[option.label]);
+  }, [waveform, waveformOptions]);
 
   return (
     <Stack spacing={1}>
       {split && Object.keys(waveformOptions).length > 0 ? (
         <>
-          {waveformOptions.map((waveformOption, index) => (
+          {filteredWaveformOptions.map((waveformOption, index) => (
             <Chart
               key={`waveform-plot-${index}`}
               waveform={{ [waveformOption.label]: waveform[waveformOption.label] }}
@@ -130,7 +139,7 @@ export default function Main(): JSX.Element {
           ))}
         </>
       ) : (
-        <Chart waveform={waveform} options={getOptions(theme.palette.mode)} waveformOptions={waveformOptions} />
+        <Chart waveform={waveform} options={getOptions(theme.palette.mode)} waveformOptions={filteredWaveformOptions} />
       )}
     </Stack>
   );

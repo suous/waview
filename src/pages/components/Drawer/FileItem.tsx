@@ -40,7 +40,7 @@ export default function FileItem({ file, underAnalysis }: { file: IFile; underAn
     if (underAnalysis) return;
 
     updateLoading(true);
-    invoke<IWaveform>('handle_file', { path: file.path })
+    invoke<IWaveform>('read_csv', { path: file.path })
       .then(res => {
         if (res != null) {
           updateWaveform(res);

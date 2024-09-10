@@ -2,7 +2,7 @@ use crate::utils::{dir_or_parent, read_csv_to_waveform};
 use crate::model::Waveform;
 
 #[tauri::command]
-pub async fn handle_file(path: &str) -> Result<Waveform, String> {
+pub async fn read_csv(path: &str) -> Result<Waveform, String> {
 	read_csv_to_waveform(path).map_err(|e| e.to_string())
 }
 
