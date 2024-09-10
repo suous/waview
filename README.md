@@ -2,7 +2,7 @@
 
 <div>
   <p align="center">
-    <img width="200px" alt="WaView Logo" src="public/waview.svg">
+    <img width="200px" style="margin-top:-10px;margin-bottom:-30px" alt="WaView Logo" src="public/waview.svg">
   </p>
   <h3 align="center">
     Simple And Tiny CSV Waveform Viewer
@@ -11,7 +11,7 @@
     Built with <a href="https://tauri.app">Tauri</a> and <a href="https://mui.com">MUI</a> to inspect waveforms in CSV files. <br />
     Optimized for minimal size and waveform rendering. 
   </p>
-  <img style="margin-top:20px" src="docs/static/screen.png" alt="waview-screen" />
+  <img src="docs/static/screen.png" alt="waview-screen" />
 </div>
 
 ## Features
