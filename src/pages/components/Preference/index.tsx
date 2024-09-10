@@ -22,12 +22,12 @@ import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import { listen } from '@tauri-apps/api/event';
 import { useTranslation } from 'react-i18next';
 
-import { ThemeMode } from '../../../@types/model';
-import useViewConfig from '../../../stores/ViewContext';
+import { ThemeMode } from '../../../@types/view';
+import useViewConfig from '../../../stores/View';
 
 export default function Preference(): JSX.Element {
   const { t, i18n } = useTranslation();
-  const { themeMode, updateThemeMode } = useViewConfig();
+  const { theme, updateTheme } = useViewConfig();
   const [language, setLanguage] = React.useState('zh');
   const [open, setOpen] = React.useState(false);
 
@@ -58,9 +58,15 @@ export default function Preference(): JSX.Element {
 
   const handleThemeMode = (_: React.MouseEvent<HTMLElement>, newThemeMode: ThemeMode | null): void => {
     if (newThemeMode != null) {
-      updateThemeMode(newThemeMode);
+      updateTheme(newThemeMode);
     }
   };
+
+  const themeOptions = [
+    { label: 'light', icon: LightModeRoundedIcon },
+    { label: 'dark', icon: DarkModeRoundedIcon },
+    { label: 'system', icon: SettingsBrightnessIcon }
+  ];
 
   return (
     <Drawer anchor='right' open={open} onClose={handleCancel}>
@@ -73,19 +79,13 @@ export default function Preference(): JSX.Element {
       <Divider />
       <Box sx={{ padding: 1, display: 'flex', flexDirection: 'column' }}>
         <Typography>{t('Mode')}</Typography>
-        <ToggleButtonGroup value={themeMode} exclusive onChange={handleThemeMode}>
-          <ToggleButton value='light' aria-label='light mode' sx={{ width: 100 }}>
-            <LightModeRoundedIcon />
-            <Typography>{t('Light')}</Typography>
-          </ToggleButton>
-          <ToggleButton value='dark' aria-label='dark mode' sx={{ width: 100 }}>
-            <DarkModeRoundedIcon />
-            <Typography>{t('Dark')}</Typography>
-          </ToggleButton>
-          <ToggleButton value='system' aria-label='system mode' sx={{ width: 100 }}>
-            <SettingsBrightnessIcon />
-            <Typography>{t('System')}</Typography>
-          </ToggleButton>
+        <ToggleButtonGroup value={theme} exclusive onChange={handleThemeMode}>
+          {themeOptions.map(({ label, icon: Icon }) => (
+            <ToggleButton key={label} value={label} aria-label={`${label} mode`} sx={{ width: 100 }}>
+              <Icon />
+              <Typography>{t(label.charAt(0).toUpperCase() + label.slice(1))}</Typography>
+            </ToggleButton>
+          ))}
         </ToggleButtonGroup>
       </Box>
       <Box sx={{ padding: 1, display: 'flex', flexDirection: 'column' }}>

@@ -13,13 +13,13 @@ import { basename } from '@tauri-apps/api/path';
 import Chart from './Chart';
 import { IWaveform, IFile } from '../../@types/model';
 import { getOptions, chartConfigs } from './utils';
-import useModelConfig from '../../stores/ModelContext';
-import useViewConfig from '../../stores/ViewContext';
+import useModelConfig from '../../stores/Model';
+import useViewConfig from '../../stores/View';
 
 export default function Main(): JSX.Element {
   const { addFiles, updateOpenedFile, waveform, updateWaveform, waveformOptions, addWaveformOptions } =
     useModelConfig();
-  const { waveformSplit, updateWaveformSplit, updateLoading } = useViewConfig();
+  const { split, updateSplit, updateLoading } = useViewConfig();
   const theme = useTheme();
 
   const handleFiles = React.useCallback(
@@ -43,11 +43,7 @@ export default function Main(): JSX.Element {
   React.useEffect(() => {
     const openFile = async (): Promise<void> => {
       try {
-        const paths = await open({
-          multiple: true,
-          filters: [{ name: 'transient', extensions: ['csv'] }]
-        });
-
+        const paths = await open({ multiple: true, filters: [{ name: 'transient', extensions: ['csv'] }] });
         if (Array.isArray(paths) && paths.length > 0) {
           const res = await handleFiles(paths);
           if (res) updateWaveform(res);
@@ -60,7 +56,6 @@ export default function Main(): JSX.Element {
     };
 
     const openPromise = listen('main-open-files', openFile);
-
     return () => {
       openPromise.then(close => close()).catch(console.error);
     };
@@ -82,7 +77,6 @@ export default function Main(): JSX.Element {
     };
 
     const dropPromise = listen<string[]>('tauri://file-drop', handleFileDrop);
-
     return () => {
       dropPromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
@@ -90,42 +84,41 @@ export default function Main(): JSX.Element {
 
   React.useEffect(() => {
     const waveformSplitListener = listen('main-split-waveforms', () => {
-      updateWaveformSplit(!waveformSplit);
-    }).catch(console.error);
+      updateSplit(!split);
+    });
+
     return () => {
-      waveformSplitListener
-        .then(close => {
-          if (close != null) {
-            close();
-          }
-        })
-        .catch(console.error);
+      waveformSplitListener.then(unsubscribe => unsubscribe()).catch(console.error);
     };
   });
 
   React.useEffect(() => {
     const channels = Object.keys(waveform);
-    if (channels.length > chartConfigs.defaultLineColors.length) {
-      for (let i = 0; i < channels.length - chartConfigs.defaultLineColors.length; i++) {
-        chartConfigs.defaultLineColors.push(
-          chartConfigs.defaultLineColors[Math.floor(Math.random() * chartConfigs.defaultLineColors.length)]
-        );
-      }
+    const colorCount = chartConfigs.defaultLineColors.length;
+
+    if (channels.length > colorCount) {
+      chartConfigs.defaultLineColors = [
+        ...chartConfigs.defaultLineColors,
+        ...Array(channels.length - colorCount)
+          .fill(0)
+          .map(() => chartConfigs.defaultLineColors[Math.floor(Math.random() * colorCount)])
+      ];
     }
-    addWaveformOptions(
-      channels.map((label, index) => ({
-        label,
-        borderColor: chartConfigs.defaultLineColors[index],
-        backgroundColor: chartConfigs.defaultLineColors[index],
-        borderWidth: chartConfigs.defaultLineWidth,
-        lineStyle: chartConfigs.defaultLineStyle
-      }))
-    );
-  }, [waveform, addWaveformOptions]);
+
+    const newWaveformOptions = channels.map((label, index) => ({
+      label,
+      borderColor: chartConfigs.defaultLineColors[index],
+      backgroundColor: chartConfigs.defaultLineColors[index],
+      borderWidth: chartConfigs.defaultLineWidth,
+      lineStyle: chartConfigs.defaultLineStyle
+    }));
+
+    addWaveformOptions(newWaveformOptions);
+  }, [waveform]);
 
   return (
     <Stack spacing={1}>
-      {waveformSplit && Object.keys(waveformOptions).length > 0 ? (
+      {split && Object.keys(waveformOptions).length > 0 ? (
         <>
           {waveformOptions.map((waveformOption, index) => (
             <Chart

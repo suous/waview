@@ -7,19 +7,19 @@ import ThemeProvider from '@mui/material/styles/ThemeProvider';
 
 import Home from './pages';
 
-import useViewConfig, { ViewProvider } from './stores/ViewContext';
-import { ModelProvider } from './stores/ModelContext';
+import useViewConfig, { ViewProvider } from './stores/View';
+import { ModelProvider } from './stores/Model';
 
 const Wrapper = (): JSX.Element => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const { themeMode } = useViewConfig();
+  const { theme } = useViewConfig();
   const systemTheme = prefersDarkMode ? 'dark' : 'light';
 
-  const theme = React.useMemo(
+  const defaultTheme = React.useMemo(
     () =>
       createTheme({
         palette: {
-          mode: themeMode === 'system' ? systemTheme : themeMode
+          mode: theme === 'system' ? systemTheme : theme
         },
         components: {
           MuiIconButton: {
@@ -47,11 +47,11 @@ const Wrapper = (): JSX.Element => {
           }
         }
       }),
-    [systemTheme, themeMode]
+    [systemTheme, theme]
   );
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={defaultTheme}>
       <ModelProvider>
         <Home />
       </ModelProvider>

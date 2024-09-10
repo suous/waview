@@ -23,14 +23,14 @@ import ClearInput from '../ClearInput';
 import FileItem from './FileItem';
 import { useToggle } from '../../Home/utils';
 
-import useViewConfig from '../../../stores/ViewContext';
-import useModelConfig from '../../../stores/ModelContext';
+import useViewConfig from '../../../stores/View';
+import useModelConfig from '../../../stores/Model';
 
 import { drawerWidth } from '../../constants';
 
 export default function ClippedDrawer(): JSX.Element {
   const { t } = useTranslation();
-  const { drawerOpen } = useViewConfig();
+  const { drawer } = useViewConfig();
   const { files, openedFile, clearFiles } = useModelConfig();
   const [filter, setFilter] = React.useState('');
   const [open, toggleOpen] = useToggle(files.length > 0);
@@ -50,7 +50,7 @@ export default function ClippedDrawer(): JSX.Element {
     )
       .then(res => {
         if (res) {
-          clearFiles();
+          clearFiles(null);
         }
       })
       .catch(console.error);
@@ -58,7 +58,7 @@ export default function ClippedDrawer(): JSX.Element {
 
   return (
     <Drawer
-      open={drawerOpen}
+      open={drawer}
       variant='persistent'
       sx={{
         width: drawerWidth,

@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import { IWaveform, IWaveformOptions } from '../../../../@types/model';
 import WaveformConfig from './WaveformConfig';
-import useModelConfig from '../../../../stores/ModelContext';
+import useModelConfig from '../../../../stores/Model';
 import { colToCSV } from '../../utils';
 
 interface Props {

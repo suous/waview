@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 
 import { IWaveformOptions } from '../../../../@types/model';
-import useModelConfig from '../../../../stores/ModelContext';
+import useModelConfig from '../../../../stores/Model';
 import CustomDialog from '../../../components/CustomDialog';
 import ChartConfig from './ChartConfig';
 

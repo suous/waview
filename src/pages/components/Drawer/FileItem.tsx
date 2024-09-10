@@ -16,8 +16,8 @@ import { confirm } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 
 import { IFile, IWaveform } from '../../../@types/model';
-import useModelConfig from '../../../stores/ModelContext';
-import useViewConfig from '../../../stores/ViewContext';
+import useModelConfig from '../../../stores/Model';
+import useViewConfig from '../../../stores/View';
 
 export default function FileItem({ file, underAnalysis }: { file: IFile; underAnalysis: boolean }): JSX.Element {
   const { t } = useTranslation();

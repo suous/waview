@@ -23,7 +23,7 @@ import { type ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
 import { ChartOptions } from 'chart.js';
 
 import { useToggle, base64ToUint8Array } from '../../utils';
-import useModelConfig from '../../../../stores/ModelContext';
+import useModelConfig from '../../../../stores/Model';
 import { IWaveformOptions } from '../../../../@types/model';
 
 type ToolsButtonProps = IconButtonProps<'button', { title: string }>;
@@ -98,16 +98,16 @@ export default function ToolsSet({
   chartRef.current?.update();
 
   const dragColor = (mode: 'x' | 'y' | 'xy'): 'primary' | 'inherit' => {
-    return options.plugins?.zoom?.zoom?.drag?.enabled === true && options.plugins?.zoom?.zoom?.mode === mode
+    return options.plugins?.zoom?.zoom?.drag?.enabled && options.plugins?.zoom?.zoom?.mode === mode
       ? 'primary'
       : 'inherit';
   };
 
   const changeCursor = (grab = false): string => {
-    if (options.plugins?.zoom?.pan?.enabled === true) {
+    if (options.plugins?.zoom?.pan?.enabled) {
       return grab ? 'grabbing' : 'grab';
     }
-    if (options.plugins?.zoom?.zoom?.drag?.enabled === true) {
+    if (options.plugins?.zoom?.zoom?.drag?.enabled) {
       switch (options.plugins?.zoom?.zoom?.mode) {
         case 'x':
           return grab ? 'col-resize' : 'ew-resize';
@@ -191,12 +191,10 @@ export default function ToolsSet({
     }
   ];
 
+  const visibleTools = waveformOptions.length === 1 ? tools : tools.filter(tool => tool.title !== t('Full Screen'));
   return (
     <>
-      {(waveformOptions.length === 0 || waveformOptions.length > 1
-        ? tools.filter(tool => tool.title !== t('Full Screen'))
-        : tools
-      ).map(({ title, ...rest }, index) => (
+      {visibleTools.map(({ title, ...rest }, index) => (
         <Tooltip title={title} key={`tools_${title}_${index}`}>
           <IconButton {...rest} />
         </Tooltip>

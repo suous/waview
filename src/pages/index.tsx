@@ -13,7 +13,7 @@ import { listen } from '@tauri-apps/api/event';
 import Main from './Home';
 import Drawer from './components/Drawer';
 import Preference from './components/Preference';
-import useViewConfig from '../stores/ViewContext';
+import useViewConfig from '../stores/View';
 import { drawerWidth } from './constants';
 
 const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })<{
@@ -36,10 +36,10 @@ const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })
 }));
 
 export default function Home(): JSX.Element {
-  const { drawerOpen, updateDrawerOpen, loading } = useViewConfig();
+  const { drawer, updateDrawer, loading } = useViewConfig();
   React.useEffect(() => {
     const displayListener = listen('main-toggle-display-files', () => {
-      updateDrawerOpen(!drawerOpen);
+      updateDrawer(!drawer);
     }).catch(console.error);
 
     return () => {
@@ -51,14 +51,14 @@ export default function Home(): JSX.Element {
         })
         .catch(console.error);
     };
-  }, [drawerOpen, updateDrawerOpen]);
+  }, [drawer, updateDrawer]);
 
   return (
     <>
       <CssBaseline />
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
         <Drawer />
-        <Container open={drawerOpen}>
+        <Container open={drawer}>
           <Main />
         </Container>
         <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={loading}>
