@@ -21,7 +21,7 @@ export const getOptions = (paletteMode: PaletteMode): ChartOptions<'line'> => ({
   scales: {
     x: {
       type: 'linear',
-      min: 0,
+      bounds: 'data',
       border: {
         display: false,
         dash: [4, 4]
