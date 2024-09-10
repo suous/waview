@@ -56,7 +56,7 @@ export default function Home(): JSX.Element {
   return (
     <>
       <CssBaseline />
-      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+      <Box sx={{ display: 'flex' }}>
         <Drawer />
         <Container open={drawer}>
           <Main />

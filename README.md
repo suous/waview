@@ -56,6 +56,15 @@ epoch,train_loss,eval_loss,eval_top1,eval_top5
 5,4.5689898899623325,2.530873125,47.813999946289066,73.12199998535156
 ```
 
+### Shortcuts
+
+| Shortcut                          | Action                 |
+| --------------------------------- | ---------------------- |
+| ⌘ + , (Ctrl + , on Windows/Linux) | Open Preferences       |
+| ⌘ + N (Ctrl + N on Windows/Linux) | Toggle Split Waveforms |
+| ⌘ + O (Ctrl + O on Windows/Linux) | Open Files             |
+| ⌘ + D (Ctrl + D on Windows/Linux) | Display Imported Files |
+
 ## Why build this?
 
 1. ⛷️ Learn: Learn about [Tauri](https://tauri.app), [React](https://react.dev), [Rust](https://www.rust-lang.org), and Modern APP development lifecycle.

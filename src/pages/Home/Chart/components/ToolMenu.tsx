@@ -31,39 +31,38 @@ export default function ToolMenu({ waveform, waveformOptions }: Props): JSX.Elem
   const { t } = useTranslation();
   const { openedFile } = useModelConfig();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
   const [configOpen, setConfigOpen] = React.useState(false);
-  const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
+
+  const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleClose = (): void => {
-    setAnchorEl(null);
-  };
+  const handleClose = React.useCallback(() => setAnchorEl(null), []);
 
-  const openConfig = (): void => {
+  const openConfig = React.useCallback(() => {
     setConfigOpen(true);
     handleClose();
-  };
+  }, [handleClose]);
 
-  const handleSaveWaveform = async (csv: string, path: string): Promise<void> => {
-    const defaultPath = await dirname(path);
-    save({ defaultPath, filters: [{ name: 'CSV', extensions: ['csv'] }] })
-      .then(path => {
-        if (path != null) {
-          writeTextFile(path, csv).catch(console.error);
-        }
-      })
-      .catch(console.error);
-  };
+  const handleSaveWaveform = React.useCallback(async (csv: string, path: string) => {
+    try {
+      const defaultPath = await dirname(path);
+      const savePath = await save({ defaultPath, filters: [{ name: 'CSV', extensions: ['csv'] }] });
+      if (savePath) {
+        await writeTextFile(savePath, csv);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
-  const saveWaveform = (): void => {
-    if (waveform != null && openedFile != null) {
+  const saveWaveform = React.useCallback(() => {
+    if (waveform && openedFile) {
       handleSaveWaveform(colToCSV(waveform), openedFile.path).then(handleClose).catch(console.error);
     }
-  };
+  }, [waveform, openedFile, handleSaveWaveform, handleClose]);
 
-  const disabled = waveformOptions == null || waveformOptions.length === 0;
+  const disabled = React.useMemo(() => !waveformOptions || waveformOptions.length === 0, [waveformOptions]);
 
   return (
     <>
@@ -72,7 +71,7 @@ export default function ToolMenu({ waveform, waveformOptions }: Props): JSX.Elem
           <MoreVertIcon />
         </IconButton>
       </Tooltip>
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={openConfig} disableRipple disabled={disabled}>
           <PermDataSettingRoundedIcon />
           <ListItemText sx={{ paddingLeft: 1 }}>{t('Chart Config')}</ListItemText>

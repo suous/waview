@@ -17,55 +17,48 @@ import { useTranslation } from 'react-i18next';
 import { IWaveformOptions } from '../../../../@types/model';
 import { chartConfigs } from '../../utils';
 
-interface State {
-  anchorEl: HTMLElement | null;
-  colorHexCode: string;
-  openLineStyleDialog: boolean;
+interface props {
+  waveformOption: IWaveformOptions;
 }
 
-export default function ChartConfig({ waveformOption }: { waveformOption: IWaveformOptions }): JSX.Element {
+export default function ChartConfig({ waveformOption }: props): JSX.Element {
   const { t } = useTranslation();
-  const [lineConfigProps, setLineConfigProps] = React.useState<State>({
-    anchorEl: null,
-    colorHexCode: waveformOption.borderColor as string,
-    openLineStyleDialog: false
-  });
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [colorHexCode, setColorHexCode] = React.useState<string>(waveformOption.borderColor as string);
+  const [openLineStyleDialog, setOpenLineStyleDialog] = React.useState<boolean>(false);
 
-  const handleLineStyleChange = (event: SelectChangeEvent<typeof waveformOption.lineStyle>): void => {
-    waveformOption.lineStyle = event.target.value;
-  };
+  const handleLineStyleChange = React.useCallback(
+    (event: SelectChangeEvent): void => {
+      waveformOption.lineStyle = event.target.value;
+    },
+    [waveformOption]
+  );
 
-  const handleLineStyleClose = (): void => {
-    setLineConfigProps({ ...lineConfigProps, openLineStyleDialog: false });
-  };
+  const handleChangeColor = React.useCallback((event: React.MouseEvent<HTMLDivElement>): void => {
+    setAnchorEl(event.currentTarget);
+  }, []);
 
-  const handleLineStyleOpen = (): void => {
-    setLineConfigProps({ ...lineConfigProps, openLineStyleDialog: true });
-  };
+  const handleColorPickerChoose = React.useCallback(
+    (color: ColorResult): void => {
+      waveformOption.borderColor = color.hex;
+      waveformOption.backgroundColor = color.hex;
+      setColorHexCode(color.hex);
+    },
+    [waveformOption]
+  );
 
-  const handleColorPickerClose = (): void => {
-    setLineConfigProps({ ...lineConfigProps, anchorEl: null });
-  };
-
-  const handleChangeColor = (event: React.MouseEvent<HTMLDivElement>): void => {
-    setLineConfigProps({ ...lineConfigProps, anchorEl: event.currentTarget });
-  };
-
-  const handleColorPickerChoose = (color: ColorResult): void => {
-    waveformOption.borderColor = color.hex;
-    waveformOption.backgroundColor = color.hex;
-    setLineConfigProps({ ...lineConfigProps, colorHexCode: color.hex });
-  };
-
-  const handleLineWidthChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    waveformOption.borderWidth = Number(event.target.value);
-  };
+  const handleLineWidthChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      waveformOption.borderWidth = Number(event.target.value);
+    },
+    [waveformOption]
+  );
 
   return (
     <Stack spacing={2} direction='row' sx={{ alignItems: 'center' }}>
       <Typography>{t('Color')}</Typography>
       <Box
-        bgcolor={lineConfigProps.colorHexCode}
+        bgcolor={colorHexCode}
         sx={{
           width: 60,
           height: 20,
@@ -77,14 +70,14 @@ export default function ChartConfig({ waveformOption }: { waveformOption: IWavef
         onClick={handleChangeColor}
       />
       <Popover
-        anchorEl={lineConfigProps.anchorEl}
-        open={Boolean(lineConfigProps.anchorEl)}
-        onClose={handleColorPickerClose}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left'
         }}>
-        <SketchPicker color={lineConfigProps.colorHexCode} onChange={handleColorPickerChoose} />
+        <SketchPicker color={colorHexCode} onChange={handleColorPickerChoose} />
       </Popover>
       <Typography>{t('Width')}</Typography>
       <TextField
@@ -111,9 +104,9 @@ export default function ChartConfig({ waveformOption }: { waveformOption: IWavef
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <Select
           variant='outlined'
-          open={lineConfigProps.openLineStyleDialog}
-          onClose={handleLineStyleClose}
-          onOpen={handleLineStyleOpen}
+          open={openLineStyleDialog}
+          onClose={() => setOpenLineStyleDialog(false)}
+          onOpen={() => setOpenLineStyleDialog(true)}
           value={waveformOption.lineStyle}
           onChange={handleLineStyleChange}
           sx={{ width: 70, height: 24 }}>
