@@ -5,8 +5,7 @@
 
 mod cmd;
 mod menu;
-mod model;
-mod utils;
+mod file;
 
 fn main() {
 	tauri::Builder::default()

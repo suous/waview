@@ -1,8 +1,9 @@
 use std::io::Read;
 use std::error::Error;
 use csv::{ReaderBuilder};
+use std::collections::HashMap;
 
-use crate::model::Waveform;
+pub type Waveform = HashMap<String, Vec<f64>>;
 
 const COMPRESSION_HEADERS: [([u8; 2], bool); 4] = [
     ([0x1F, 0x8B], true),  // GZIP
@@ -70,10 +71,8 @@ pub fn read_csv_to_waveform(path: &str) -> Result<Waveform, Box<dyn Error>> {
                 }
             }
         }
-
         waveform.retain(|_, values| !values.is_empty());
     }
-
     Ok(waveform)
 }
 
