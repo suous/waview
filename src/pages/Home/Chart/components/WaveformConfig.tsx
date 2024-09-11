@@ -1,9 +1,7 @@
 /** @format */
 
 import * as React from 'react';
-
 import Stack from '@mui/material/Stack';
-
 import { useTranslation } from 'react-i18next';
 
 import { IWaveformOptions } from '../../../../@types/model';
@@ -11,13 +9,13 @@ import useModelConfig from '../../../../stores/Model';
 import CustomDialog from '../../../components/CustomDialog';
 import ChartConfig from './ChartConfig';
 
-interface props {
+interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
   waveformOptions: IWaveformOptions[];
 }
 
-export default function WaveformConfig({ open, setOpen, waveformOptions }: props): JSX.Element {
+export default function WaveformConfig({ open, setOpen, waveformOptions }: Props): JSX.Element {
   const { t } = useTranslation();
   const { updateWaveformOptions } = useModelConfig();
 

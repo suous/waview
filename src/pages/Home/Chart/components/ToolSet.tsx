@@ -1,7 +1,6 @@
 /** @format */
 
 import * as React from 'react';
-
 import HighlightAltRoundedIcon from '@mui/icons-material/HighlightAltRounded';
 import ExpandRoundedIcon from '@mui/icons-material/ExpandRounded';
 import ZoomInRoundedIcon from '@mui/icons-material/ZoomInRounded';
@@ -13,7 +12,6 @@ import FullscreenExitRoundedIcon from '@mui/icons-material/FullscreenExitRounded
 import FullscreenRoundedIcon from '@mui/icons-material/FullscreenRounded';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-
 import { save } from '@tauri-apps/api/dialog';
 import { dirname } from '@tauri-apps/api/path';
 import { writeBinaryFile } from '@tauri-apps/api/fs';

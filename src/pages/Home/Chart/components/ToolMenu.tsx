@@ -1,7 +1,6 @@
 /** @format */
 
 import * as React from 'react';
-
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,11 +9,9 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import PermDataSettingRoundedIcon from '@mui/icons-material/PermDataSettingRounded';
 import SaveAltRoundedIcon from '@mui/icons-material/SaveAltRounded';
-
 import { save } from '@tauri-apps/api/dialog';
 import { writeTextFile } from '@tauri-apps/api/fs';
 import { dirname } from '@tauri-apps/api/path';
-
 import { useTranslation } from 'react-i18next';
 
 import { IWaveform, IWaveformOptions } from '../../../../@types/model';

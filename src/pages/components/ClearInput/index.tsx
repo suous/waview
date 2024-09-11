@@ -10,13 +10,13 @@ import FormControl from '@mui/material/FormControl';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material';
 
-interface ClearInputProps extends Pick<OutlinedInputProps, 'placeholder' | 'onChange' | 'sx'> {
+interface Props extends Pick<OutlinedInputProps, 'placeholder' | 'onChange' | 'sx'> {
   value: string;
   onClick: () => void;
   sxForm?: SxProps<Theme>;
 }
 
-function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm }: ClearInputProps) {
+function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm }: Props) {
   return (
     <FormControl fullWidth margin='none' sx={sxForm}>
       <OutlinedInput

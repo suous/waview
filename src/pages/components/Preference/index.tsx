@@ -14,11 +14,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
-
 import { listen } from '@tauri-apps/api/event';
 import { useTranslation } from 'react-i18next';
 
@@ -32,41 +30,45 @@ export default function Preference(): JSX.Element {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const handleOpenPreference = () => setOpen(true);
-
-    listen('main-open-preference', handleOpenPreference)
-      .then(close => {
-        return () => {
-          close();
-        };
-      })
-      .catch(console.error);
+    const open = listen('main-open-preference', () => setOpen(true)).catch(console.error);
+    return () => {
+      open.then(close => close && close()).catch(console.error);
+    };
   }, []);
 
-  const handleCancel = (): void => {
+  const handleCancel = React.useCallback((): void => {
     setOpen(false);
-  };
+  }, []);
 
-  const handleLanguageChange = async (event: SelectChangeEvent): Promise<void> => {
-    try {
-      await i18n.changeLanguage(event.target.value);
-      setLanguage(event.target.value);
-    } catch (error) {
-      console.error('Failed to change language:', error);
-    }
-  };
+  const handleLanguageChange = React.useCallback(
+    async (event: SelectChangeEvent): Promise<void> => {
+      try {
+        await i18n.changeLanguage(event.target.value);
+        setLanguage(event.target.value);
+      } catch (error) {
+        console.error('Failed to change language:', error);
+      }
+    },
+    [i18n]
+  );
 
-  const handleThemeMode = (_: React.MouseEvent<HTMLElement>, newThemeMode: ThemeMode | null): void => {
-    if (newThemeMode != null) {
-      updateTheme(newThemeMode);
-    }
-  };
+  const handleThemeMode = React.useCallback(
+    (_: React.MouseEvent<HTMLElement>, newThemeMode: ThemeMode | null): void => {
+      if (newThemeMode != null) {
+        updateTheme(newThemeMode);
+      }
+    },
+    [updateTheme]
+  );
 
-  const themeOptions = [
-    { label: 'light', icon: LightModeRoundedIcon },
-    { label: 'dark', icon: DarkModeRoundedIcon },
-    { label: 'system', icon: SettingsBrightnessIcon }
-  ];
+  const themeOptions = React.useMemo(
+    () => [
+      { label: 'light', icon: LightModeRoundedIcon },
+      { label: 'dark', icon: DarkModeRoundedIcon },
+      { label: 'system', icon: SettingsBrightnessIcon }
+    ],
+    []
+  );
 
   return (
     <Drawer anchor='right' open={open} onClose={handleCancel}>

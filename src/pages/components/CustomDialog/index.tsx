@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material';
 
-type DialogContentProps = React.PropsWithChildren<{
+type Props = React.PropsWithChildren<{
   open: boolean;
   title: string;
   label: string;
@@ -30,7 +30,7 @@ export default function CustomDialog({
   handleCancel,
   sx,
   secondButton
-}: DialogContentProps): JSX.Element {
+}: Props): JSX.Element {
   return (
     <Dialog onClose={handleCancel} open={open}>
       <DialogTitle sx={{ p: 1.5 }}>

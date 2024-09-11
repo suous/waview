@@ -11,17 +11,16 @@ import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
-
 import { useTranslation } from 'react-i18next';
 
 import { IWaveformOptions } from '../../../../@types/model';
 import { chartConfigs } from '../../utils';
 
-interface props {
+interface Props {
   waveformOption: IWaveformOptions;
 }
 
-export default function ChartConfig({ waveformOption }: props): JSX.Element {
+export default function ChartConfig({ waveformOption }: Props): JSX.Element {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [colorHexCode, setColorHexCode] = React.useState<string>(waveformOption.borderColor as string);

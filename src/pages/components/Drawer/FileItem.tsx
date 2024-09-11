@@ -10,7 +10,6 @@ import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
 import { invoke } from '@tauri-apps/api';
 import { confirm } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
@@ -19,12 +18,16 @@ import { IFile, IWaveform } from '../../../@types/model';
 import useModelConfig from '../../../stores/Model';
 import useViewConfig from '../../../stores/View';
 
-export default function FileItem({ file, underAnalysis }: { file: IFile; underAnalysis: boolean }): JSX.Element {
+interface Props {
+  file: IFile;
+  underAnalysis: boolean;
+}
+
+export default function FileItem({ file, underAnalysis }: Props): JSX.Element {
   const { t } = useTranslation();
   const { updateOpenedFile, updateWaveform, deleteFile } = useModelConfig();
   const { updateLoading } = useViewConfig();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   const openContextMenu = (e: React.MouseEvent<HTMLElement>): void => {
     e.preventDefault();
@@ -36,9 +39,8 @@ export default function FileItem({ file, underAnalysis }: { file: IFile; underAn
     setAnchorEl(null);
   };
 
-  const handleItemClick = (): void => {
+  const handleItemClick = React.useCallback(() => {
     if (underAnalysis) return;
-
     updateLoading(true);
     invoke<IWaveform>('read_csv', { path: file.path })
       .then(res => {
@@ -48,29 +50,25 @@ export default function FileItem({ file, underAnalysis }: { file: IFile; underAn
         }
       })
       .catch(console.error)
-      .finally(() => {
-        updateLoading(false);
-      });
-  };
+      .finally(() => updateLoading(false));
+  }, [underAnalysis, file, updateLoading, updateWaveform, updateOpenedFile]);
 
-  const handleOpenFolder = (): void => {
-    if (file != null) {
-      invoke('open_folder', { path: file.path }).then(handleClose).catch(console.error);
-    }
-  };
+  const handleOpenFolder = React.useCallback(() => {
+    invoke('open_folder', { path: file.path })
+      .then(() => setAnchorEl(null))
+      .catch(console.error);
+  }, [file.path]);
 
-  const handleDeleteFile = (): void => {
+  const handleDeleteFile = React.useCallback(() => {
     confirm(
       `${t('Will delete the file from the imported files list, ')}${t('You cannot undo this action.')}`,
       t('Delete the file form the imported file list?')
     )
       .then(res => {
-        if (res) {
-          deleteFile(file);
-        }
+        if (res) deleteFile(file);
       })
       .catch(console.error);
-  };
+  }, [t, deleteFile, file]);
 
   return (
     <>
@@ -90,7 +88,7 @@ export default function FileItem({ file, underAnalysis }: { file: IFile; underAn
         </ListItemIcon>
         <ListItemText primary={file.name} />
       </ListItemButton>
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+      <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
         <MenuItem dense onClick={handleOpenFolder}>
           <ListItemIcon>
             <FolderOpenOutlinedIcon />

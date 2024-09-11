@@ -1,7 +1,6 @@
 /** @format */
 
 import * as React from 'react';
-
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
@@ -15,17 +14,14 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
-
 import { confirm } from '@tauri-apps/api/dialog';
 import { useTranslation } from 'react-i18next';
 
 import ClearInput from '../ClearInput';
 import FileItem from './FileItem';
 import { useToggle } from '../../Home/utils';
-
 import useViewConfig from '../../../stores/View';
 import useModelConfig from '../../../stores/Model';
-
 import { drawerWidth } from '../../constants';
 
 export default function ClippedDrawer(): JSX.Element {
@@ -35,15 +31,15 @@ export default function ClippedDrawer(): JSX.Element {
   const [filter, setFilter] = React.useState('');
   const [open, toggleOpen] = useToggle(files.length > 0);
 
-  const clearFilter = (): void => {
+  const clearFilter = React.useCallback((): void => {
     setFilter('');
-  };
+  }, []);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleFilterChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     setFilter(e.target.value);
-  };
+  }, []);
 
-  const handleClearFiles = (): void => {
+  const handleClearFiles = React.useCallback((): void => {
     confirm(
       `${t('Will clear imported files immediately, ')}${t('You cannot undo this action.')}`,
       t('Clear imported files list?')
@@ -54,7 +50,12 @@ export default function ClippedDrawer(): JSX.Element {
         }
       })
       .catch(console.error);
-  };
+  }, [t, clearFiles]);
+
+  const filteredFiles = React.useMemo(
+    () => files.filter(file => file.name.toLowerCase().includes(filter.toLowerCase())),
+    [files, filter]
+  );
 
   return (
     <Drawer
@@ -97,11 +98,9 @@ export default function ClippedDrawer(): JSX.Element {
           </ListItem>
           <Collapse in={open} timeout='auto' unmountOnExit>
             <List sx={{ overflowY: 'auto', height: 'calc(100vh - 90px)' }} disablePadding>
-              {files
-                .filter(file => file.name.toLowerCase().includes(filter.toLowerCase()))
-                .map((file, index) => (
-                  <FileItem key={`${file.name}-${index}`} file={file} underAnalysis={file.path === openedFile?.path} />
-                ))}
+              {filteredFiles.map((file, index) => (
+                <FileItem key={`${file.name}-${index}`} file={file} underAnalysis={file.path === openedFile?.path} />
+              ))}
             </List>
           </Collapse>
         </List>
