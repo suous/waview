@@ -70,3 +70,11 @@ epoch,train_loss,eval_loss,eval_top1,eval_top5
 2. 🔭 Explore: Explore some CSV files I have.
 
 3. 🤷‍♂️ I have no idea.
+
+## Limitations
+
+1. 🏕️ Only support naive CSV files with numerical columns.
+
+2. 🧟‍♂️ Performance is limited with a huge number of data points.
+
+3. 🏗️ Lack of strong typing and test coverage.
