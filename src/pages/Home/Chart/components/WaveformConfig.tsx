@@ -1,6 +1,5 @@
 /** @format */
 
-// @ts-expect-error make eslint happy
 import * as React from 'react';
 
 import Stack from '@mui/material/Stack';
@@ -12,25 +11,24 @@ import useModelConfig from '../../../../stores/Model';
 import CustomDialog from '../../../components/CustomDialog';
 import ChartConfig from './ChartConfig';
 
-export default function WaveformConfig({
-  open,
-  setOpen,
-  waveformOptions
-}: {
+interface props {
   open: boolean;
   setOpen: (open: boolean) => void;
   waveformOptions: IWaveformOptions[];
-}): JSX.Element {
+}
+
+export default function WaveformConfig({ open, setOpen, waveformOptions }: props): JSX.Element {
   const { t } = useTranslation();
   const { updateWaveformOptions } = useModelConfig();
-  const handleCancel = (): void => {
-    setOpen(false);
-  };
 
-  const handleEnsure = (): void => {
+  const handleCancel = React.useCallback((): void => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const handleEnsure = React.useCallback((): void => {
     updateWaveformOptions(waveformOptions);
     handleCancel();
-  };
+  }, [updateWaveformOptions, waveformOptions, handleCancel]);
 
   return (
     <CustomDialog
