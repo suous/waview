@@ -47,9 +47,9 @@ export default function ToolsSet({
   const [, toggleUpdate] = useToggle(false);
   const { t } = useTranslation();
 
-  const resetZoom = (): void => chartRef?.current?.resetZoom();
-  const zoomIn = (): void => chartRef?.current?.zoom(1.1);
-  const zoomOut = (): void => chartRef?.current?.zoom(0.9);
+  const resetZoom = React.useCallback((): void => chartRef?.current?.resetZoom(), [chartRef]);
+  const zoomIn = React.useCallback((): void => chartRef?.current?.zoom(1.1), [chartRef]);
+  const zoomOut = React.useCallback((): void => chartRef?.current?.zoom(0.9), [chartRef]);
 
   const handleSaveImage = async (image: Uint8Array, path: string): Promise<void> => {
     const defaultPath = await dirname(path);
@@ -71,31 +71,33 @@ export default function ToolsSet({
     }
   };
 
-  const togglePan = (): void => {
+  const togglePan = React.useCallback((): void => {
     if (options.plugins?.zoom?.pan != null && options.plugins?.zoom?.zoom?.drag != null) {
-      options.plugins.zoom.pan.enabled = options.plugins.zoom.pan.enabled === false;
+      options.plugins.zoom.pan.enabled = !options.plugins.zoom.pan.enabled;
       options.plugins.zoom.zoom.drag.enabled = false;
     }
     toggleUpdate();
-  };
+  }, [options.plugins?.zoom, toggleUpdate]);
 
-  const toggleDrag = (mode: 'x' | 'y' | 'xy' = 'xy'): void => {
-    if (options.plugins?.zoom?.pan != null && options.plugins?.zoom?.zoom?.drag != null) {
-      options.plugins.zoom.pan.enabled = false;
-      options.plugins.zoom.zoom.drag.enabled =
-        options.plugins?.zoom?.zoom?.mode === mode ? options.plugins?.zoom?.zoom?.drag?.enabled === false : true;
-      options.plugins.zoom.zoom.mode = mode;
+  const toggleDrag = React.useCallback(
+    (mode: 'x' | 'y' | 'xy' = 'xy'): void => {
+      if (options.plugins?.zoom?.pan != null && options.plugins?.zoom?.zoom?.drag != null) {
+        options.plugins.zoom.pan.enabled = false;
+        options.plugins.zoom.zoom.drag.enabled =
+          options.plugins?.zoom?.zoom?.mode === mode ? !options.plugins?.zoom?.zoom?.drag?.enabled : true;
+        options.plugins.zoom.zoom.mode = mode;
+      }
+      toggleUpdate();
+    },
+    [options.plugins?.zoom, toggleUpdate]
+  );
+
+  React.useEffect(() => {
+    if (options.plugins?.legend != null) {
+      options.plugins.legend.position = waveformOptions.length > 1 ? 'top' : 'chartArea';
+      options.plugins.legend.align = waveformOptions.length > 1 ? 'center' : 'start';
     }
-    toggleUpdate();
-  };
-
-  if (options.plugins?.legend != null) {
-    options.plugins.legend.position = waveformOptions.length > 1 ? 'top' : 'chartArea';
-    options.plugins.legend.align = waveformOptions.length > 1 ? 'center' : 'start';
-  }
-
-  // necessary to update the chart
-  chartRef.current?.update();
+  }, [options.plugins?.legend, waveformOptions.length]);
 
   const dragColor = (mode: 'x' | 'y' | 'xy'): 'primary' | 'inherit' => {
     return options.plugins?.zoom?.zoom?.drag?.enabled && options.plugins?.zoom?.zoom?.mode === mode
@@ -103,95 +105,113 @@ export default function ToolsSet({
       : 'inherit';
   };
 
-  const changeCursor = (grab = false): string => {
-    if (options.plugins?.zoom?.pan?.enabled) {
-      return grab ? 'grabbing' : 'grab';
-    }
-    if (options.plugins?.zoom?.zoom?.drag?.enabled) {
-      switch (options.plugins?.zoom?.zoom?.mode) {
-        case 'x':
-          return grab ? 'col-resize' : 'ew-resize';
-        case 'y':
-          return grab ? 'row-resize' : 'ns-resize';
-        case 'xy':
-          return grab ? 'zoom-in' : 'crosshair';
-        default:
-          return 'auto';
-      }
-    }
-    return 'auto';
-  };
+  React.useEffect(() => {
+    // necessary to update the chart
+    chartRef.current?.update();
 
-  if (chartRef.current?.canvas != null) {
-    chartRef.current.canvas.onmousedown = () => {
-      if (chartRef.current?.canvas?.style != null) {
-        chartRef.current.canvas.style.cursor = changeCursor(true);
+    const changeCursor = (grab = false): string => {
+      if (options.plugins?.zoom?.pan?.enabled) {
+        return grab ? 'grabbing' : 'grab';
       }
+      if (options.plugins?.zoom?.zoom?.drag?.enabled) {
+        switch (options.plugins?.zoom?.zoom?.mode) {
+          case 'x':
+            return grab ? 'col-resize' : 'ew-resize';
+          case 'y':
+            return grab ? 'row-resize' : 'ns-resize';
+          case 'xy':
+            return grab ? 'zoom-in' : 'crosshair';
+          default:
+            return 'auto';
+        }
+      }
+      return 'auto';
     };
-    chartRef.current.canvas.onmouseup = () => {
-      if (chartRef.current?.canvas?.style != null) {
-        chartRef.current.canvas.style.cursor = changeCursor();
-      }
-    };
-  }
-  if (chartRef.current?.canvas?.style != null) {
-    chartRef.current.canvas.style.cursor = changeCursor();
-  }
 
-  const tools: ToolsButtonProps[] = [
-    {
-      title: t('Zoom XY'),
-      color: dragColor('xy'),
-      children: <HighlightAltRoundedIcon />,
-      onClick: () => toggleDrag('xy')
-    },
-    {
-      title: t('Zoom X'),
-      color: dragColor('x'),
-      children: <ExpandRoundedIcon />,
-      onClick: () => toggleDrag('x'),
-      sx: { '& svg': { transform: 'rotate(-90deg)' } }
-    },
-    {
-      title: t('Zoom Y'),
-      color: dragColor('y'),
-      children: <ExpandRoundedIcon />,
-      onClick: () => toggleDrag('y')
-    },
-    {
-      title: t('Zoom In'),
-      children: <ZoomInRoundedIcon />,
-      onClick: zoomIn
-    },
-    {
-      title: t('Zoom Out'),
-      children: <ZoomOutRoundedIcon />,
-      onClick: zoomOut
-    },
-    {
-      title: t('Pan'),
-      color: options.plugins?.zoom?.pan?.enabled === true ? 'primary' : 'inherit',
-      children: <PanToolAltRoundedIcon />,
-      onClick: togglePan
-    },
-    {
-      title: t('Reset'),
-      children: <AutorenewRoundedIcon />,
-      onClick: resetZoom
-    },
-    {
-      title: t('Full Screen'),
-      children: fullScreen ? <FullscreenExitRoundedIcon /> : <FullscreenRoundedIcon />,
-      onClick: toggleFullScreen
-    },
-    {
-      title: t('Save Image'),
-      children: <SaveRoundedIcon />,
-      onClick: saveImage
+    if (chartRef.current?.canvas != null) {
+      const canvas = chartRef.current.canvas;
+      canvas.onmousedown = () => {
+        canvas.style.cursor = changeCursor(true);
+      };
+      canvas.onmouseup = () => {
+        canvas.style.cursor = changeCursor();
+      };
+      canvas.style.cursor = changeCursor();
     }
-  ];
+  });
 
-  const visibleTools = waveformOptions.length === 1 ? tools : tools.filter(tool => tool.title !== t('Full Screen'));
+  const tools = React.useMemo<ToolsButtonProps[]>(
+    () => [
+      {
+        title: t('Zoom XY'),
+        color: dragColor('xy'),
+        children: <HighlightAltRoundedIcon />,
+        onClick: () => toggleDrag('xy')
+      },
+      {
+        title: t('Zoom X'),
+        color: dragColor('x'),
+        children: <ExpandRoundedIcon />,
+        onClick: () => toggleDrag('x'),
+        sx: { '& svg': { transform: 'rotate(-90deg)' } }
+      },
+      {
+        title: t('Zoom Y'),
+        color: dragColor('y'),
+        children: <ExpandRoundedIcon />,
+        onClick: () => toggleDrag('y')
+      },
+      {
+        title: t('Zoom In'),
+        children: <ZoomInRoundedIcon />,
+        onClick: zoomIn
+      },
+      {
+        title: t('Zoom Out'),
+        children: <ZoomOutRoundedIcon />,
+        onClick: zoomOut
+      },
+      {
+        title: t('Pan'),
+        color: options.plugins?.zoom?.pan?.enabled === true ? 'primary' : 'inherit',
+        children: <PanToolAltRoundedIcon />,
+        onClick: togglePan
+      },
+      {
+        title: t('Reset'),
+        children: <AutorenewRoundedIcon />,
+        onClick: resetZoom
+      },
+      {
+        title: t('Full Screen'),
+        children: fullScreen ? <FullscreenExitRoundedIcon /> : <FullscreenRoundedIcon />,
+        onClick: toggleFullScreen
+      },
+      {
+        title: t('Save Image'),
+        children: <SaveRoundedIcon />,
+        onClick: saveImage
+      }
+    ],
+    [
+      t,
+      dragColor,
+      toggleDrag,
+      zoomIn,
+      zoomOut,
+      options.plugins?.zoom?.pan?.enabled,
+      togglePan,
+      resetZoom,
+      fullScreen,
+      toggleFullScreen,
+      saveImage
+    ]
+  );
+
+  const visibleTools = React.useMemo(
+    () => (waveformOptions.length === 1 ? tools : tools.filter(tool => tool.title !== t('Full Screen'))),
+    [waveformOptions.length, tools, t]
+  );
   return (
     <>
       {visibleTools.map(({ title, ...rest }, index) => (
