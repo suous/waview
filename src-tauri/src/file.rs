@@ -12,11 +12,11 @@ const COMPRESSION_HEADERS: [([u8; 2], bool); 4] = [
     ([0x78, 0xDA], false), // ZLIB2
 ];
 
-pub fn is_compressed(bytes: &[u8]) -> bool {
+fn is_compressed(bytes: &[u8]) -> bool {
     COMPRESSION_HEADERS.iter().any(|(header, _)| bytes.starts_with(header))
 }
 
-pub fn decompress(bytes: &[u8]) -> Option<Vec<u8>> {
+fn decompress(bytes: &[u8]) -> Option<Vec<u8>> {
     COMPRESSION_HEADERS.iter().find(|(header, _)| bytes.starts_with(header)).and_then(|(_, is_gzip)| {
         let mut decoder: Box<dyn Read> = if *is_gzip {
             Box::new(flate2::read::MultiGzDecoder::new(bytes))
@@ -29,6 +29,13 @@ pub fn decompress(bytes: &[u8]) -> Option<Vec<u8>> {
     })
 }
 
+fn read_file(path: &str) -> Option<Vec<u8>> {
+	let file = std::fs::read(path).ok()?;
+	match is_compressed(&file) {
+		true => decompress(&file),
+		false => Some(file),
+	}
+}
 
 pub fn dir_or_parent(path: &str) -> Option<&str> {
 	let path = std::path::Path::new(path);
@@ -36,14 +43,6 @@ pub fn dir_or_parent(path: &str) -> Option<&str> {
 		.then_some(path)
 		.or_else(|| path.parent())
 		.and_then(|p| p.to_str())
-}
-
-fn read_file(path: &str) -> Option<Vec<u8>> {
-	let file = std::fs::read(path).ok()?;
-	match is_compressed(&file) {
-		true => decompress(&file),
-		false => Some(file),
-	}
 }
 
 pub fn read_csv_to_waveform(path: &str) -> Result<Waveform, Box<dyn Error>> {
