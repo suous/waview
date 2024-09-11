@@ -16,18 +16,17 @@
 
 ## Features
 
-1. 🦥 Simple: Built with simplicity in mind, making it easy to use and understand.
+1. 🦥 Simple: Built with simplicity in mind, less than 2K lines of code.
 
 2. 🐜 Tiny: Optimized for minimal size, less than 2M bundle size.
 
-3. 🥷 Customizable: Easy to customize the waveform style and configuration.
+3. 🥷 Customizable: Easy to customize the app and waveform style.
 
 4. 🗿 Multi-language: Support for multiple languages, including English, Chinese.
 
 5. 🛹 Multi-platform: Support for multiple platforms, including Windows, macOS, and Linux.
 
 ```bash
-# The code of waview is less than 2000 lines of code.
 ===============================================================================
  Language            Files        Lines         Code     Comments       Blanks
 ===============================================================================
