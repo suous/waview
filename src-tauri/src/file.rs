@@ -42,30 +42,25 @@ pub fn dir_or_parent(path: &str) -> Option<&str> {
 pub fn read_csv_to_waveform(path: &str) -> Result<Waveform, Box<dyn Error>> {
     let csv_data = read_file(path).ok_or("Failed to read file")?;
     let mut reader = ReaderBuilder::new()
-        .has_headers(false)
+        .has_headers(true)
         .flexible(true)
         .from_reader(csv_data.as_slice());
 
-    let mut waveform = Waveform::new();
-    let mut records = reader.records();
+    let headers = reader.headers()?.clone();
+    let mut waveform: Waveform = headers.iter()
+        .map(|header| (header.to_string(), Vec::new()))
+        .collect();
 
-    if let Some(Ok(keys)) = records.next() {
-        for key in keys.iter() {
-            waveform.insert(key.to_string(), Vec::new());
-        }
-
-        for record in records {
-            let record = record?;
-            for (i, field) in record.iter().enumerate() {
-                if let Some(values) = waveform.get_mut(keys.get(i).unwrap_or_default()) {
-                    if let Ok(value) = field.parse::<f64>() {
-                        values.push(value);
-                    }
-                }
+    for result in reader.records() {
+        let record = result?;
+        for (header, field) in headers.iter().zip(record.iter()) {
+            if let Ok(value) = field.parse::<f64>() {
+                waveform.get_mut(header).unwrap().push(value);
             }
         }
-        waveform.retain(|_, values| !values.is_empty());
     }
+
+    waveform.retain(|_, values| !values.is_empty());
     Ok(waveform)
 }
 
