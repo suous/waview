@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ModelContextType, ModelActionType } from '../@types/model';
-import { createActionCreator } from './Action';
+import { createActionCreator, useConfig } from './Action';
 
 const initialState: ModelContextType = {
   files: [],
@@ -79,9 +79,5 @@ export function ModelProvider({ children }: { children: React.ReactNode }): JSX.
 }
 
 export default function useModelConfig(): ModelContextType {
-  const context = React.useContext(ModelContext);
-  if (context === undefined) {
-    throw new Error('useModelConfig must be used within ModelProvider');
-  }
-  return context;
+  return useConfig(ModelContext, 'model');
 }

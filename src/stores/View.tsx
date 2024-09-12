@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ViewActionType, ViewContextType } from '../@types/view';
-import { createActionCreator } from './Action';
+import { createActionCreator, useConfig } from './Action';
 
 const initialState: ViewContextType = {
   drawer: false,
@@ -36,9 +36,5 @@ export function ViewProvider({ children }: { children: React.ReactNode }): JSX.E
 }
 
 export default function useViewConfig(): ViewContextType {
-  const context = React.useContext(ViewContext);
-  if (context === undefined) {
-    throw new Error('useViewConfig must be used within ViewProvider');
-  }
-  return context;
+  return useConfig(ViewContext, 'view');
 }
