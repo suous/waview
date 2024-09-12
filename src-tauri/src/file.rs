@@ -12,10 +12,6 @@ const COMPRESSION_HEADERS: [([u8; 2], bool); 4] = [
     ([0x78, 0xDA], false), // ZLIB2
 ];
 
-fn is_compressed(bytes: &[u8]) -> bool {
-    COMPRESSION_HEADERS.iter().any(|(header, _)| bytes.starts_with(header))
-}
-
 fn decompress(bytes: &[u8]) -> Option<Vec<u8>> {
     COMPRESSION_HEADERS.iter().find(|(header, _)| bytes.starts_with(header)).and_then(|(_, is_gzip)| {
         let mut decoder: Box<dyn Read> = if *is_gzip {
@@ -30,11 +26,9 @@ fn decompress(bytes: &[u8]) -> Option<Vec<u8>> {
 }
 
 fn read_file(path: &str) -> Option<Vec<u8>> {
-	let file = std::fs::read(path).ok()?;
-	match is_compressed(&file) {
-		true => decompress(&file),
-		false => Some(file),
-	}
+    std::fs::read(path).ok().and_then(|file| {
+        decompress(&file).or(Some(file))
+    })
 }
 
 pub fn dir_or_parent(path: &str) -> Option<&str> {
