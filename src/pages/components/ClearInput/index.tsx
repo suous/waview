@@ -16,7 +16,7 @@ interface Props extends Pick<OutlinedInputProps, 'placeholder' | 'onChange' | 's
   sxForm?: SxProps<Theme>;
 }
 
-function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm }: Props) {
+export default function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm = null }: Props) {
   return (
     <FormControl fullWidth margin='none' sx={sxForm}>
       <OutlinedInput
@@ -37,9 +37,3 @@ function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm }: Props
     </FormControl>
   );
 }
-
-ClearInput.defaultProps = {
-  sxForm: null
-};
-
-export default ClearInput;

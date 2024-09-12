@@ -28,8 +28,8 @@ export default function CustomDialog({
   children,
   handleEnsure,
   handleCancel,
-  sx,
-  secondButton
+  sx = null,
+  secondButton = null
 }: Props): JSX.Element {
   return (
     <Dialog onClose={handleCancel} open={open}>
@@ -51,8 +51,3 @@ export default function CustomDialog({
     </Dialog>
   );
 }
-
-CustomDialog.defaultProps = {
-  sx: null,
-  secondButton: null
-};
