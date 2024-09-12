@@ -7,7 +7,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import styled from '@mui/material/styles/styled';
-
 import { listen } from '@tauri-apps/api/event';
 
 import Main from './Home';
@@ -18,26 +17,14 @@ import { drawerWidth } from './constants';
 
 const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })<{
   open?: boolean;
-}>(({ theme }) => ({
+}>(({ theme, open }) => ({
   flexGrow: 1,
   padding: theme.spacing(1),
+  marginLeft: open ? 0 : `-${drawerWidth}px`,
   transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        transition: theme.transitions.create('margin', {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen
-        }),
-        marginLeft: 0
-      }
-    }
-  ]
+    easing: theme.transitions.easing[open ? 'easeOut' : 'sharp'],
+    duration: theme.transitions.duration[open ? 'enteringScreen' : 'leavingScreen']
+  })
 }));
 
 export default function Home(): JSX.Element {
