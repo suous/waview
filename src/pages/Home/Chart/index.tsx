@@ -32,11 +32,7 @@ export default function Chart({ waveform, options, waveformOptions }: Props): JS
     [waveform, waveformOptions]
   );
 
-  const height = React.useMemo(
-    () => (fullScreen || waveformOptions.length !== 1 ? 'calc(99vh - 12px)' : '48vh'),
-    [fullScreen, waveformOptions.length]
-  );
-
+  const height = fullScreen || waveformOptions.length !== 1 ? 'calc(99vh - 12px)' : '48vh';
   return (
     <Paper elevation={2} sx={{ height }}>
       <Stack spacing={0} direction='row'>

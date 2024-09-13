@@ -35,11 +35,7 @@ export default function FileItem({ file, underAnalysis }: Props): JSX.Element {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleClose = (): void => {
-    setAnchorEl(null);
-  };
-
-  const handleItemClick = React.useCallback(() => {
+  const handleItemClick = () => {
     if (underAnalysis) return;
     updateLoading(true);
     invoke<IWaveform>('read_csv', { path: file.path })
@@ -51,15 +47,14 @@ export default function FileItem({ file, underAnalysis }: Props): JSX.Element {
       })
       .catch(console.error)
       .finally(() => updateLoading(false));
-  }, [underAnalysis, file, updateLoading, updateWaveform, updateOpenedFile]);
+  };
 
-  const handleOpenFolder = React.useCallback(() => {
+  const handleOpenFolder = () =>
     invoke('open_folder', { path: file.path })
       .then(() => setAnchorEl(null))
       .catch(console.error);
-  }, [file.path]);
 
-  const handleDeleteFile = React.useCallback(() => {
+  const handleDeleteFile = () =>
     confirm(
       `${t('Will delete the file from the imported files list, ')}${t('You cannot undo this action.')}`,
       t('Delete the file form the imported file list?')
@@ -68,7 +63,6 @@ export default function FileItem({ file, underAnalysis }: Props): JSX.Element {
         if (res) deleteFile(file);
       })
       .catch(console.error);
-  }, [t, deleteFile, file]);
 
   return (
     <>
@@ -88,7 +82,7 @@ export default function FileItem({ file, underAnalysis }: Props): JSX.Element {
         </ListItemIcon>
         <ListItemText primary={file.name} />
       </ListItemButton>
-      <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+      <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={() => setAnchorEl(null)}>
         <MenuItem dense onClick={handleOpenFolder}>
           <ListItemIcon>
             <FolderOpenOutlinedIcon />

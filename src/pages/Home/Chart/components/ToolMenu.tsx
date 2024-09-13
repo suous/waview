@@ -30,41 +30,33 @@ export default function ToolMenu({ waveform, waveformOptions }: Props): JSX.Elem
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [configOpen, setConfigOpen] = React.useState(false);
 
-  const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  }, []);
+  const handleClose = () => setAnchorEl(null);
 
-  const handleClose = React.useCallback(() => setAnchorEl(null), []);
-
-  const openConfig = React.useCallback(() => {
+  const openConfig = () => {
     setConfigOpen(true);
     handleClose();
-  }, [handleClose]);
+  };
 
-  const handleSaveWaveform = React.useCallback(async (csv: string, path: string) => {
-    try {
-      const defaultPath = await dirname(path);
-      const savePath = await save({ defaultPath, filters: [{ name: 'CSV', extensions: ['csv'] }] });
-      if (savePath) {
-        await writeTextFile(savePath, csv);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
-  const saveWaveform = React.useCallback(() => {
+  const saveWaveform = async () => {
     if (waveform && openedFile) {
-      handleSaveWaveform(colToCSV(waveform), openedFile.path).then(handleClose).catch(console.error);
+      try {
+        const defaultPath = await dirname(openedFile.path);
+        const savePath = await save({ defaultPath, filters: [{ name: 'CSV', extensions: ['csv'] }] });
+        if (savePath) {
+          await writeTextFile(savePath, colToCSV(waveform));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      handleClose();
     }
-  }, [waveform, openedFile, handleSaveWaveform, handleClose]);
+  };
 
-  const disabled = React.useMemo(() => !waveformOptions || waveformOptions.length === 0, [waveformOptions]);
-
+  const disabled = !waveformOptions || waveformOptions.length === 0;
   return (
     <>
       <Tooltip title={t('More')}>
-        <IconButton onClick={handleClick}>
+        <IconButton onClick={e => setAnchorEl(e.currentTarget)}>
           <MoreVertIcon />
         </IconButton>
       </Tooltip>

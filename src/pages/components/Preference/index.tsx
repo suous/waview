@@ -36,39 +36,28 @@ export default function Preference(): JSX.Element {
     };
   }, []);
 
-  const handleCancel = React.useCallback((): void => {
-    setOpen(false);
-  }, []);
+  const handleCancel = () => setOpen(false);
 
-  const handleLanguageChange = React.useCallback(
-    async (event: SelectChangeEvent): Promise<void> => {
-      try {
-        await i18n.changeLanguage(event.target.value);
-        setLanguage(event.target.value);
-      } catch (error) {
-        console.error('Failed to change language:', error);
-      }
-    },
-    [i18n]
-  );
+  const handleLanguageChange = async (event: SelectChangeEvent): Promise<void> => {
+    try {
+      await i18n.changeLanguage(event.target.value);
+      setLanguage(event.target.value);
+    } catch (error) {
+      console.error('Failed to change language:', error);
+    }
+  };
 
-  const handleThemeMode = React.useCallback(
-    (_: React.MouseEvent<HTMLElement>, newThemeMode: ThemeMode | null): void => {
-      if (newThemeMode != null) {
-        updateTheme(newThemeMode);
-      }
-    },
-    [updateTheme]
-  );
+  const handleThemeMode = (_: React.MouseEvent<HTMLElement>, newThemeMode: ThemeMode | null): void => {
+    if (newThemeMode != null) {
+      updateTheme(newThemeMode);
+    }
+  };
 
-  const themeOptions = React.useMemo(
-    () => [
-      { label: 'light', icon: LightModeRoundedIcon },
-      { label: 'dark', icon: DarkModeRoundedIcon },
-      { label: 'system', icon: SettingsBrightnessIcon }
-    ],
-    []
-  );
+  const themeOptions = [
+    { label: 'light', icon: LightModeRoundedIcon },
+    { label: 'dark', icon: DarkModeRoundedIcon },
+    { label: 'system', icon: SettingsBrightnessIcon }
+  ];
 
   return (
     <Drawer anchor='right' open={open} onClose={handleCancel}>

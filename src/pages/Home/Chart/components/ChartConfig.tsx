@@ -1,10 +1,9 @@
 /** @format */
 
 import * as React from 'react';
-
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { ColorResult, SketchPicker } from 'react-color';
 import Stack from '@mui/material/Stack';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
@@ -26,32 +25,18 @@ export default function ChartConfig({ waveformOption }: Props): JSX.Element {
   const [colorHexCode, setColorHexCode] = React.useState<string>(waveformOption.borderColor as string);
   const [openLineStyleDialog, setOpenLineStyleDialog] = React.useState<boolean>(false);
 
-  const handleLineStyleChange = React.useCallback(
-    (event: SelectChangeEvent): void => {
-      waveformOption.lineStyle = event.target.value;
-    },
-    [waveformOption]
-  );
+  const handleLineStyleChange = (event: SelectChangeEvent) => {
+    waveformOption.lineStyle = event.target.value as string;
+  };
 
-  const handleChangeColor = React.useCallback((event: React.MouseEvent<HTMLDivElement>): void => {
-    setAnchorEl(event.currentTarget);
-  }, []);
+  const handleColorPickerChoose = (color: ColorResult) => {
+    waveformOption.borderColor = waveformOption.backgroundColor = color.hex;
+    setColorHexCode(color.hex);
+  };
 
-  const handleColorPickerChoose = React.useCallback(
-    (color: ColorResult): void => {
-      waveformOption.borderColor = color.hex;
-      waveformOption.backgroundColor = color.hex;
-      setColorHexCode(color.hex);
-    },
-    [waveformOption]
-  );
-
-  const handleLineWidthChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>): void => {
-      waveformOption.borderWidth = Number(event.target.value);
-    },
-    [waveformOption]
-  );
+  const handleLineWidthChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    waveformOption.borderWidth = Number(event.target.value);
+  };
 
   return (
     <Stack spacing={2} direction='row' sx={{ alignItems: 'center' }}>
@@ -66,7 +51,7 @@ export default function ChartConfig({ waveformOption }: Props): JSX.Element {
             cursor: 'pointer'
           }
         }}
-        onClick={handleChangeColor}
+        onClick={e => setAnchorEl(e.currentTarget)}
       />
       <Popover
         anchorEl={anchorEl}

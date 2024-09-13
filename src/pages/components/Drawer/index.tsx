@@ -31,15 +31,7 @@ export default function ClippedDrawer(): JSX.Element {
   const [filter, setFilter] = React.useState('');
   const [open, toggleOpen] = useToggle(files.length > 0);
 
-  const clearFilter = React.useCallback((): void => {
-    setFilter('');
-  }, []);
-
-  const handleFilterChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    setFilter(e.target.value);
-  }, []);
-
-  const handleClearFiles = React.useCallback((): void => {
+  const handleClearFiles = () => {
     confirm(
       `${t('Will clear imported files immediately, ')}${t('You cannot undo this action.')}`,
       t('Clear imported files list?')
@@ -50,13 +42,9 @@ export default function ClippedDrawer(): JSX.Element {
         }
       })
       .catch(console.error);
-  }, [t, clearFiles]);
+  };
 
-  const filteredFiles = React.useMemo(
-    () => files.filter(file => file.name.toLowerCase().includes(filter.toLowerCase())),
-    [files, filter]
-  );
-
+  const filteredFiles = files.filter(file => file.name.toLowerCase().includes(filter.toLowerCase()));
   return (
     <Drawer
       open={drawer}
@@ -70,8 +58,8 @@ export default function ClippedDrawer(): JSX.Element {
       }}>
       <Box sx={{ minWidth: 'fit-content' }}>
         <ClearInput
-          onClick={clearFilter}
-          onChange={handleFilterChange}
+          onClick={() => setFilter('')}
+          onChange={e => setFilter(e.target.value)}
           value={filter}
           placeholder={t('Search')}
           sxForm={{ paddingLeft: 1, paddingRight: 1, marginTop: 1 }}
