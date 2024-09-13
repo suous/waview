@@ -24,8 +24,7 @@ const Wrapper = (): JSX.Element => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const { theme } = useViewConfig();
 
-  const systemTheme = React.useMemo(() => (prefersDarkMode ? 'dark' : 'light'), [prefersDarkMode]);
-
+  const systemTheme = prefersDarkMode ? 'dark' : 'light';
   const defaultTheme = React.useMemo(
     () => createAppTheme(theme === 'system' ? systemTheme : theme),
     [systemTheme, theme]
