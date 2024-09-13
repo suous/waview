@@ -22,82 +22,66 @@ export default function Main(): JSX.Element {
   const { split, updateSplit, updateLoading } = useViewConfig();
   const theme = useTheme();
 
-  const handleFiles = React.useCallback(
-    async (paths: string[]): Promise<IWaveform | undefined> => {
-      if (paths.length === 0) return;
-      const files: IFile[] = await Promise.all(
-        paths.map(async (path: string) => ({ path, name: await basename(path) }))
-      );
-      addFiles(files);
-      updateOpenedFile(files[0]);
-      return await invoke('read_csv', { path: paths[0] });
-    },
-    [addFiles, updateOpenedFile]
-  );
+  const handleFiles = async (paths: string[]): Promise<IWaveform | undefined> => {
+    if (paths.length === 0) return;
+    const files: IFile[] = await Promise.all(paths.map(async (path: string) => ({ path, name: await basename(path) })));
+    addFiles(files);
+    updateOpenedFile(files[0]);
+    return await invoke('read_csv', { path: paths[0] });
+  };
 
-  const updateWaveformOptions = React.useCallback(
-    (waveform: IWaveform) => {
-      const channels = Object.keys(waveform);
-      const colorCount = chartConfigs.defaultLineColors.length;
+  const updateWaveformOptions = (waveform: IWaveform) => {
+    const channels = Object.keys(waveform);
+    const colorCount = chartConfigs.defaultLineColors.length;
 
-      if (channels.length > colorCount) {
-        chartConfigs.defaultLineColors = [
-          ...chartConfigs.defaultLineColors,
-          ...Array(channels.length - colorCount)
-            .fill(0)
-            .map(() => chartConfigs.defaultLineColors[Math.floor(Math.random() * colorCount)])
-        ];
+    if (channels.length > colorCount) {
+      chartConfigs.defaultLineColors = [
+        ...chartConfigs.defaultLineColors,
+        ...Array(channels.length - colorCount)
+          .fill(0)
+          .map(() => chartConfigs.defaultLineColors[Math.floor(Math.random() * colorCount)])
+      ];
+    }
+
+    const newWaveformOptions = channels.map((label, index) => ({
+      label,
+      borderColor: chartConfigs.defaultLineColors[index],
+      backgroundColor: chartConfigs.defaultLineColors[index],
+      borderWidth: chartConfigs.defaultLineWidth,
+      lineStyle: chartConfigs.defaultLineStyle
+    }));
+    addWaveformOptions(newWaveformOptions);
+  };
+
+  const processFiles = async (paths: string[]) => {
+    if (paths.length === 0) return;
+    updateLoading(true);
+    try {
+      const waveform = await handleFiles(paths);
+      if (waveform) {
+        updateWaveform(waveform);
+        updateWaveformOptions(waveform);
       }
+    } catch (error) {
+      console.error('Error processing files:', error);
+    } finally {
+      updateLoading(false);
+    }
+  };
 
-      const newWaveformOptions = channels.map((label, index) => ({
-        label,
-        borderColor: chartConfigs.defaultLineColors[index],
-        backgroundColor: chartConfigs.defaultLineColors[index],
-        borderWidth: chartConfigs.defaultLineWidth,
-        lineStyle: chartConfigs.defaultLineStyle
-      }));
-      addWaveformOptions(newWaveformOptions);
-    },
-    [addWaveformOptions]
-  );
-
-  const processFiles = React.useCallback(
-    async (paths: string[]) => {
-      if (paths.length === 0) return;
-      updateLoading(true);
-      try {
-        const waveform = await handleFiles(paths);
-        if (waveform) {
-          updateWaveform(waveform);
-          updateWaveformOptions(waveform);
-        }
-      } catch (error) {
-        console.error('Error processing files:', error);
-      } finally {
-        updateLoading(false);
-      }
-    },
-    [handleFiles, updateWaveform, updateWaveformOptions, updateLoading]
-  );
-
-  const handleFileOpen = React.useCallback(async () => {
+  const handleFileOpen = async () => {
     const paths = await open({ multiple: true, filters: [{ name: 'transient', extensions: ['csv', 'gz'] }] });
     if (Array.isArray(paths)) {
       await processFiles(paths);
     }
-  }, [processFiles]);
+  };
 
-  const handleFileDrop = React.useCallback(
-    async (event: { payload: string[] }) => {
-      const paths = event.payload.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
-      await processFiles(paths);
-    },
-    [processFiles]
-  );
+  const handleFileDrop = async (event: { payload: string[] }) => {
+    const paths = event.payload.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
+    await processFiles(paths);
+  };
 
-  const handleWaveformSplit = React.useCallback(() => {
-    updateSplit(!split);
-  }, [split, updateSplit]);
+  const handleWaveformSplit = () => updateSplit(!split);
 
   React.useEffect(() => {
     const openPromise = listen('main-open-files', handleFileOpen);

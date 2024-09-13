@@ -137,9 +137,7 @@ export function colToCSV<T = number>(cols: Record<string, readonly T[]>): string
   const entries = Object.entries(cols);
   const headers = entries.map(([key]) => key).join(',');
   const minimumItems = Math.min(...entries.map(([, value]) => value.length));
-
   const rows = Array.from({ length: minimumItems }, (_, i) => entries.map(([, value]) => value[i]).join(','));
-
   return `${headers}\n${rows.join('\n')}`;
 }
 
