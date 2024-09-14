@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom/client';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import './App.css';
 import App from './App';
 import resources from './locales/resources';
 
