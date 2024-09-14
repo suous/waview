@@ -61,6 +61,35 @@
 | ⌘ + O (Ctrl + O on Windows/Linux) | Open Files             |
 | ⌘ + D (Ctrl + D on Windows/Linux) | Display Imported Files |
 
+### Development
+
+1. Install tauri [prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites).
+
+2. Install [bun](https://bun.sh) package manager.
+
+3. Clone and cd to the repo.
+
+```bash
+# clone the repo
+git clone https://github.com/suous/waview.git
+
+# cd to the repo
+cd waview
+```
+
+4. Install dependencies.
+
+```bash
+# install dependencies
+bun install
+
+# dev
+bun run tauri dev
+
+# build
+bun run tauri build
+```
+
 ## Why build this?
 
 1. ⛷️ Learn: Learn about [Tauri](https://tauri.app), [React](https://react.dev), [Rust](https://www.rust-lang.org), and Modern APP development lifecycle.
