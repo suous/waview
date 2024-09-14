@@ -6,7 +6,7 @@ import createTheme from '@mui/material/styles/createTheme';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 
 import Home from './pages';
-import useViewConfig, { ViewProvider } from './stores/View';
+import useViewConfig from './stores/View';
 import { ModelProvider } from './stores/Model';
 
 const createAppTheme = (mode: 'light' | 'dark') =>
@@ -20,7 +20,7 @@ const createAppTheme = (mode: 'light' | 'dark') =>
     }
   });
 
-const Wrapper = (): JSX.Element => {
+export default function App(): JSX.Element {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const { theme } = useViewConfig();
 
@@ -36,13 +36,5 @@ const Wrapper = (): JSX.Element => {
         <Home />
       </ModelProvider>
     </ThemeProvider>
-  );
-};
-
-export default function App(): JSX.Element {
-  return (
-    <ViewProvider>
-      <Wrapper />
-    </ViewProvider>
   );
 }

@@ -8,6 +8,7 @@ import { initReactI18next } from 'react-i18next';
 
 import App from './App';
 import resources from './locales/resources';
+import { ViewProvider } from './stores/View';
 
 i18n
   .use(initReactI18next)
@@ -22,6 +23,8 @@ i18n
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <ViewProvider>
+      <App />
+    </ViewProvider>
   </React.StrictMode>
 );
