@@ -24,7 +24,7 @@
 
 4. 🗿 Multi-language: Support for multiple languages, including English, Chinese.
 
-5. 🛹 Multi-platform: Support for multiple platforms, including Windows, macOS, and Linux.
+5. 🛹 Cross-platform: Support for multiple platforms, including Windows, macOS, and Linux.
 
 ```bash
 ===============================================================================
@@ -41,7 +41,7 @@
 
 ## How to use
 
-1. Drag a CSV file with columns of numerical values to the app. For example:
+1. Drag any CSV file with columns of numerical values to the app. For example:
 
 | epoch | train_loss | eval_loss | eval_top1 | eval_top5 |
 | ----- | ---------- | --------- | --------- | --------- |
