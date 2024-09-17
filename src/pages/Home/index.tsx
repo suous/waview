@@ -93,7 +93,7 @@ export default function Main(): JSX.Element {
       splitPromise.then(unsubscribe => unsubscribe()).catch(console.error);
       dropPromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  }, [split]);
+  });
 
   const filteredWaveformOptions = React.useMemo(() => {
     return waveformOptions.filter(option => waveform[option.label]);

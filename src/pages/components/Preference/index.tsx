@@ -30,11 +30,11 @@ export default function Preference(): JSX.Element {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const open = listen('main-open-preference', () => setOpen(true)).catch(console.error);
+    const openPromise = listen('main-open-preference', () => setOpen(true));
     return () => {
-      open.then(close => close && close()).catch(console.error);
+      openPromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  }, []);
+  });
 
   const handleCancel = () => setOpen(false);
 
@@ -61,12 +61,10 @@ export default function Preference(): JSX.Element {
 
   return (
     <Drawer anchor='right' open={open} onClose={handleCancel}>
-      <DialogTitle sx={{ p: 1.5 }}>
-        <Typography variant='h6'>{t('Preference')}</Typography>
-        <IconButton onClick={handleCancel} sx={{ position: 'absolute', right: 8, top: 8 }}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+      <DialogTitle sx={{ p: 1.5 }}>{t('Preference')}</DialogTitle>
+      <IconButton onClick={handleCancel} sx={{ position: 'absolute', right: 8, top: 8 }}>
+        <CloseIcon />
+      </IconButton>
       <Divider />
       <Box sx={{ padding: 1, display: 'flex', flexDirection: 'column' }}>
         <Typography>{t('Mode')}</Typography>

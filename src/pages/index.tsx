@@ -29,21 +29,14 @@ const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })
 
 export default function Home(): JSX.Element {
   const { drawer, updateDrawer, loading } = useViewConfig();
-  React.useEffect(() => {
-    const displayListener = listen('main-toggle-display-files', () => {
-      updateDrawer(!drawer);
-    }).catch(console.error);
 
+  const handleDrawer = () => updateDrawer(!drawer);
+  React.useEffect(() => {
+    const displayPromise = listen('main-toggle-display-files', handleDrawer);
     return () => {
-      displayListener
-        .then(close => {
-          if (close != null) {
-            close();
-          }
-        })
-        .catch(console.error);
+      displayPromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  }, [drawer, updateDrawer]);
+  });
 
   return (
     <Box sx={{ display: 'flex' }}>
