@@ -31,18 +31,13 @@ export default function ClippedDrawer(): JSX.Element {
   const [filter, setFilter] = React.useState('');
   const [open, toggleOpen] = useToggle(files.length > 0);
 
-  const handleClearFiles = () => {
+  const handleClearFiles = () =>
     confirm(
       `${t('Will clear imported files immediately, ')}${t('You cannot undo this action.')}`,
       t('Clear imported files list?')
     )
-      .then(res => {
-        if (res) {
-          clearFiles(null);
-        }
-      })
+      .then(res => res && clearFiles(null))
       .catch(console.error);
-  };
 
   const filteredFiles = files.filter(file => file.name.toLowerCase().includes(filter.toLowerCase()));
   return (

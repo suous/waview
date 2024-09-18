@@ -18,19 +18,9 @@ type Props = React.PropsWithChildren<{
   handleEnsure: () => void;
   handleCancel: () => void;
   sx?: SxProps<Theme>;
-  secondButton?: React.ReactNode;
 }>;
 
-export default function CustomDialog({
-  open,
-  title,
-  label,
-  children,
-  handleEnsure,
-  handleCancel,
-  sx = null,
-  secondButton = null
-}: Props): JSX.Element {
+export default function CustomDialog({ open, title, label, children, handleEnsure, handleCancel, sx = null }: Props) {
   return (
     <Dialog onClose={handleCancel} open={open}>
       <DialogTitle sx={{ p: 1.5 }}>
@@ -43,7 +33,6 @@ export default function CustomDialog({
         {children}
       </DialogContent>
       <DialogActions>
-        {secondButton}
         <Button autoFocus onClick={handleEnsure}>
           {label}
         </Button>
