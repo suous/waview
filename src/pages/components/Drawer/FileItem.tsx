@@ -59,9 +59,7 @@ export default function FileItem({ file, underAnalysis }: Props): JSX.Element {
       `${t('Will delete the file from the imported files list, ')}${t('You cannot undo this action.')}`,
       t('Delete the file form the imported file list?')
     )
-      .then(res => {
-        if (res) deleteFile(file);
-      })
+      .then(res => res && deleteFile(file))
       .catch(console.error);
 
   return (

@@ -46,15 +46,20 @@ pub fn read_csv_to_waveform(path: &str) -> Result<Waveform, Box<dyn Error>> {
         .flexible(true)
         .from_reader(csv_data.as_slice());
 
-    let headers = reader.headers()?.clone();
+    let headers: Vec<String> = reader.headers()?
+        .iter()
+        .map(str::trim)
+        .map(String::from)
+        .collect();
+
     let mut waveform: Waveform = headers.iter()
-        .map(|header| (header.to_string(), Vec::new()))
+        .map(|header| (header.clone(), Vec::new()))
         .collect();
 
     for result in reader.records() {
         let record = result?;
         for (header, field) in headers.iter().zip(record.iter()) {
-            if let Ok(value) = field.parse::<f64>() {
+            if let Ok(value) = field.trim().parse::<f64>() {
                 waveform.get_mut(header).unwrap().push(value);
             }
         }
