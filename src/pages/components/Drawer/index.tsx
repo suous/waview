@@ -14,7 +14,7 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
-import { confirm } from '@tauri-apps/api/dialog';
+import { confirm } from '@tauri-apps/plugin-dialog';
 import { useTranslation } from 'react-i18next';
 
 import ClearInput from '../ClearInput';
@@ -24,7 +24,7 @@ import useViewConfig from '../../../stores/View';
 import useModelConfig from '../../../stores/Model';
 import { drawerWidth } from '../../constants';
 
-export default function ClippedDrawer(): JSX.Element {
+export default function ClippedDrawer(): React.JSX.Element {
   const { t } = useTranslation();
   const { drawer } = useViewConfig();
   const { files, openedFile, clearFiles } = useModelConfig();
@@ -73,9 +73,7 @@ export default function ClippedDrawer(): JSX.Element {
               )
             }>
             <ListItemButton dense sx={{ paddingLeft: 0 }} disableGutters onClick={toggleOpen}>
-              <ListItemIcon sx={{ minWidth: 24 }}>
-                {open ? <ArrowDropDownRoundedIcon /> : <ArrowRightRoundedIcon />}
-              </ListItemIcon>
+              <ListItemIcon sx={{ minWidth: 24 }}>{open ? <ArrowDropDownRoundedIcon /> : <ArrowRightRoundedIcon />}</ListItemIcon>
               <ListItemText primary={t('Imported Files')} />
             </ListItemButton>
           </ListItem>

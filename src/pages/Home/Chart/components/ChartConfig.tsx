@@ -19,7 +19,7 @@ interface Props {
   waveformOption: IWaveformOptions;
 }
 
-export default function ChartConfig({ waveformOption }: Props): JSX.Element {
+export default function ChartConfig({ waveformOption }: Props): React.JSX.Element {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [colorHexCode, setColorHexCode] = React.useState<string>(waveformOption.borderColor as string);

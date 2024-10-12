@@ -5,10 +5,13 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import useTheme from '@mui/material/styles/useTheme';
 
-import { invoke } from '@tauri-apps/api';
-import { listen } from '@tauri-apps/api/event';
-import { open } from '@tauri-apps/api/dialog';
+import { invoke } from '@tauri-apps/api/core';
+import { listen, TauriEvent } from '@tauri-apps/api/event';
+import { open } from '@tauri-apps/plugin-dialog';
 import { basename } from '@tauri-apps/api/path';
+
+import { getName } from '@tauri-apps/api/app';
+import { Menu, MenuItem, Submenu } from '@tauri-apps/api/menu';
 
 import Chart from './Chart';
 import { IWaveform, IFile } from '../../@types/model';
@@ -16,10 +19,9 @@ import { getOptions, chartConfigs } from './utils';
 import useModelConfig from '../../stores/Model';
 import useViewConfig from '../../stores/View';
 
-export default function Main(): JSX.Element {
-  const { addFiles, updateOpenedFile, waveform, updateWaveform, waveformOptions, addWaveformOptions } =
-    useModelConfig();
-  const { split, updateSplit, updateLoading } = useViewConfig();
+export default function Main(): React.JSX.Element {
+  const { addFiles, updateOpenedFile, waveform, updateWaveform, waveformOptions, addWaveformOptions } = useModelConfig();
+  const { split, drawer, preference, updateSplit, updateLoading, updateDrawer, updatePreference } = useViewConfig();
   const theme = useTheme();
 
   const handleFiles = async (paths: string[]): Promise<IWaveform | undefined> => {
@@ -76,21 +78,35 @@ export default function Main(): JSX.Element {
     }
   };
 
-  const handleFileDrop = async (event: { payload: string[] }) => {
-    const paths = event.payload.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
+  const handleFileDrop = async (event: { payload: { paths: string[] } }) => {
+    const paths = event.payload.paths.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
     await processFiles(paths);
   };
 
-  const handleWaveformSplit = () => updateSplit(!split);
+  const handleSplit = () => updateSplit(!split);
+  const handleDrawer = () => updateDrawer(!drawer);
+  const handlePreference = () => updatePreference(!preference);
+  async function createMenu() {
+    const name = await getName();
+    const menu = await Menu.default();
+    const items = await menu.items();
+    const file = items[1] as Submenu;
+    const customs = [
+      await MenuItem.new({ id: `__${name}_pref`, text: 'Preference', accelerator: 'CmdOrCtrl+P', action: handlePreference }),
+      await MenuItem.new({ id: `__${name}_disp`, text: 'Display', accelerator: 'CmdOrCtrl+D', action: handleDrawer }),
+      await MenuItem.new({ id: `__${name}_split`, text: 'Split', accelerator: 'CmdOrCtrl+S', action: handleSplit }),
+      await MenuItem.new({ id: `__${name}_file`, text: 'File', accelerator: 'CmdOrCtrl+O', action: handleFileOpen })
+    ];
+    await file.prepend(customs);
+    await menu.removeAt(items.length - 1); // remove the help menu
+    menu.setAsAppMenu();
+  }
+  createMenu();
 
   React.useEffect(() => {
-    const openPromise = listen('main-open-files', handleFileOpen);
-    const dropPromise = listen<string[]>('tauri://file-drop', handleFileDrop);
-    const splitPromise = listen('main-split-waveforms', handleWaveformSplit);
+    const dropPromise = listen(TauriEvent.DRAG_DROP, handleFileDrop);
 
     return () => {
-      openPromise.then(unsubscribe => unsubscribe()).catch(console.error);
-      splitPromise.then(unsubscribe => unsubscribe()).catch(console.error);
       dropPromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
   });

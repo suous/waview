@@ -1,6 +1,5 @@
 /** @format */
 
-// @ts-expect-error make eslint happy
 import * as React from 'react';
 import OutlinedInput, { OutlinedInputProps } from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -16,7 +15,7 @@ interface Props extends Pick<OutlinedInputProps, 'placeholder' | 'onChange' | 's
   sxForm?: SxProps<Theme>;
 }
 
-export default function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm = null }: Props) {
+export default function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm = null }: Props): React.JSX.Element {
   return (
     <FormControl fullWidth margin='none' sx={sxForm}>
       <OutlinedInput

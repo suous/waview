@@ -5,10 +5,12 @@ import { ViewActionType, ViewContextType } from '../@types/view';
 import { createActionCreator, useConfig } from './Action';
 
 const initialState: ViewContextType = {
+  preference: false,
   drawer: false,
   split: true,
   loading: false,
   theme: 'system',
+  updatePreference: () => {},
   updateDrawer: () => {},
   updateSplit: () => {},
   updateLoading: () => {},
@@ -26,6 +28,7 @@ export function ViewProvider({ children }: { children: React.ReactNode }): JSX.E
   const createAction = createActionCreator<ViewActionType>(dispatch);
   const value = {
     ...state,
+    updatePreference: createAction('UPDATE_PREFERENCE'),
     updateDrawer: createAction('UPDATE_DRAWER'),
     updateSplit: createAction('UPDATE_SPLIT'),
     updateLoading: createAction('UPDATE_LOADING'),

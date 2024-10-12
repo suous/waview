@@ -17,26 +17,17 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
-import { listen } from '@tauri-apps/api/event';
 import { useTranslation } from 'react-i18next';
 
 import { ThemeMode } from '../../../@types/view';
 import useViewConfig from '../../../stores/View';
 
-export default function Preference(): JSX.Element {
+export default function Preference(): React.JSX.Element {
   const { t, i18n } = useTranslation();
-  const { theme, updateTheme } = useViewConfig();
+  const { theme, updateTheme, preference, updatePreference } = useViewConfig();
   const [language, setLanguage] = React.useState('en');
-  const [open, setOpen] = React.useState(false);
 
-  React.useEffect(() => {
-    const openPromise = listen('main-open-preference', () => setOpen(true));
-    return () => {
-      openPromise.then(unsubscribe => unsubscribe()).catch(console.error);
-    };
-  });
-
-  const handleCancel = () => setOpen(false);
+  const handleCancel = () => updatePreference(false);
 
   const handleLanguageChange = async (event: SelectChangeEvent): Promise<void> => {
     try {
@@ -60,7 +51,7 @@ export default function Preference(): JSX.Element {
   ];
 
   return (
-    <Drawer anchor='right' open={open} onClose={handleCancel}>
+    <Drawer anchor='right' open={preference} onClose={handleCancel}>
       <DialogTitle sx={{ p: 1.5 }}>{t('Preference')}</DialogTitle>
       <IconButton onClick={handleCancel} sx={{ position: 'absolute', right: 8, top: 8 }}>
         <CloseIcon />

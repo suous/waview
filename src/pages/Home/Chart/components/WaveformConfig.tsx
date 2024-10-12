@@ -1,6 +1,5 @@
 /** @format */
 
-// @ts-expect-error make eslint happy
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +15,7 @@ interface Props {
   waveformOptions: IWaveformOptions[];
 }
 
-export default function WaveformConfig({ open, setOpen, waveformOptions }: Props): JSX.Element {
+export default function WaveformConfig({ open, setOpen, waveformOptions }: Props): React.JSX.Element {
   const { t } = useTranslation();
   const { updateWaveformOptions } = useModelConfig();
 

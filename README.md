@@ -8,7 +8,7 @@
     Simple And Tiny CSV Waveform Viewer
   </h3>
   <p align="center">
-    Built with <a href="https://tauri.app">Tauri</a> and <a href="https://mui.com">MUI</a> to inspect waveforms in CSV files. <br />
+    Built with <a href="https://tauri.app">Tauri 2</a> and <a href="https://mui.com">MUI 6</a> to inspect waveforms in CSV files. <br />
     Optimized for minimal size and waveform rendering. 
   </p>
   <img src="docs/static/screen.png" alt="waview-screen" />
@@ -31,11 +31,11 @@
  Language            Files        Lines         Code     Comments       Blanks
 ===============================================================================
  HTML                    1           16           13            1            2
- Rust                    5          197          174            0           23
- TSX                    17         1246         1098           21          127
- TypeScript              7          252          208           14           30
+ Rust                    5          132          114            1           17
+ TSX                    17         1234         1089           19          126
+ TypeScript              7          255          211           14           30
 ===============================================================================
- Total                  30         1711         1493           36          182
+ Total                  30         1637         1427           35          175
 ===============================================================================
 ```
 

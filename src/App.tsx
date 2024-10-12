@@ -20,15 +20,12 @@ const createAppTheme = (mode: 'light' | 'dark') =>
     }
   });
 
-export default function App(): JSX.Element {
+export default function App(): React.JSX.Element {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const { theme } = useViewConfig();
 
   const systemTheme = prefersDarkMode ? 'dark' : 'light';
-  const defaultTheme = React.useMemo(
-    () => createAppTheme(theme === 'system' ? systemTheme : theme),
-    [systemTheme, theme]
-  );
+  const defaultTheme = React.useMemo(() => createAppTheme(theme === 'system' ? systemTheme : theme), [systemTheme, theme]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

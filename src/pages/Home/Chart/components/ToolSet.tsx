@@ -12,9 +12,9 @@ import FullscreenExitRoundedIcon from '@mui/icons-material/FullscreenExitRounded
 import FullscreenRoundedIcon from '@mui/icons-material/FullscreenRounded';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import { save } from '@tauri-apps/api/dialog';
+import { save } from '@tauri-apps/plugin-dialog';
 import { dirname } from '@tauri-apps/api/path';
-import { writeBinaryFile } from '@tauri-apps/api/fs';
+import { writeFile } from '@tauri-apps/plugin-fs';
 import { useTranslation } from 'react-i18next';
 // @ts-expect-error it exist
 import { type ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
@@ -34,13 +34,7 @@ interface Props {
   toggleFullScreen: () => void;
 }
 
-export default function ToolsSet({
-  chartRef,
-  options,
-  waveformOptions,
-  fullScreen,
-  toggleFullScreen
-}: Props): JSX.Element {
+export default function ToolsSet({ chartRef, options, waveformOptions, fullScreen, toggleFullScreen }: Props): React.JSX.Element {
   const { openedFile } = useModelConfig();
   const [, toggleUpdate] = useToggle(false);
   const { t } = useTranslation();
@@ -54,7 +48,7 @@ export default function ToolsSet({
     save({ defaultPath, filters: [{ name: 'PNG', extensions: ['png'] }] })
       .then(path => {
         if (path != null) {
-          writeBinaryFile(path, image).catch(console.error);
+          writeFile(path, image).catch(console.error);
         }
       })
       .catch(console.error);
@@ -63,9 +57,7 @@ export default function ToolsSet({
   const saveImage = (): void => {
     const image = chartRef?.current?.toBase64Image();
     if (image != null && openedFile != null) {
-      handleSaveImage(base64ToUint8Array(image.replace('data:image/png;base64,', '')), openedFile.path).catch(
-        console.error
-      );
+      handleSaveImage(base64ToUint8Array(image.replace('data:image/png;base64,', '')), openedFile.path).catch(console.error);
     }
   };
 
@@ -95,9 +87,7 @@ export default function ToolsSet({
   }, [options.plugins?.legend, waveformOptions.length]);
 
   const dragColor = (mode: 'x' | 'y' | 'xy'): 'primary' | 'inherit' => {
-    return options.plugins?.zoom?.zoom?.drag?.enabled && options.plugins?.zoom?.zoom?.mode === mode
-      ? 'primary'
-      : 'inherit';
+    return options.plugins?.zoom?.zoom?.drag?.enabled && options.plugins?.zoom?.zoom?.mode === mode ? 'primary' : 'inherit';
   };
 
   React.useEffect(() => {

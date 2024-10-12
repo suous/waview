@@ -10,8 +10,8 @@ import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { invoke } from '@tauri-apps/api';
-import { confirm } from '@tauri-apps/api/dialog';
+import { invoke } from '@tauri-apps/api/core';
+import { confirm } from '@tauri-apps/plugin-dialog';
 import { useTranslation } from 'react-i18next';
 
 import { IFile, IWaveform } from '../../../@types/model';
@@ -23,7 +23,7 @@ interface Props {
   underAnalysis: boolean;
 }
 
-export default function FileItem({ file, underAnalysis }: Props): JSX.Element {
+export default function FileItem({ file, underAnalysis }: Props): React.JSX.Element {
   const { t } = useTranslation();
   const { updateOpenedFile, updateWaveform, deleteFile } = useModelConfig();
   const { updateLoading } = useViewConfig();

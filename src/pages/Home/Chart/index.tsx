@@ -18,7 +18,7 @@ interface Props {
   waveformOptions: IWaveformOptions[];
 }
 
-export default function Chart({ waveform, options, waveformOptions }: Props): JSX.Element {
+export default function Chart({ waveform, options, waveformOptions }: Props): React.JSX.Element {
   const [fullScreen, toggleFullScreen] = useToggle(false);
   const chartRef = React.useRef();
   const datasets = React.useMemo(

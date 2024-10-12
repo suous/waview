@@ -20,7 +20,15 @@ type Props = React.PropsWithChildren<{
   sx?: SxProps<Theme>;
 }>;
 
-export default function CustomDialog({ open, title, label, children, handleEnsure, handleCancel, sx = null }: Props) {
+export default function CustomDialog({
+  open,
+  title,
+  label,
+  children,
+  handleEnsure,
+  handleCancel,
+  sx = null
+}: Props): React.JSX.Element {
   return (
     <Dialog onClose={handleCancel} open={open}>
       <DialogTitle sx={{ p: 1.5 }}>

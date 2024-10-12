@@ -7,7 +7,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import styled from '@mui/material/styles/styled';
-import { listen } from '@tauri-apps/api/event';
 
 import Main from './Home';
 import Drawer from './components/Drawer';
@@ -27,16 +26,8 @@ const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })
   })
 }));
 
-export default function Home(): JSX.Element {
-  const { drawer, updateDrawer, loading } = useViewConfig();
-
-  const handleDrawer = () => updateDrawer(!drawer);
-  React.useEffect(() => {
-    const displayPromise = listen('main-toggle-display-files', handleDrawer);
-    return () => {
-      displayPromise.then(unsubscribe => unsubscribe()).catch(console.error);
-    };
-  });
+export default function Home(): React.JSX.Element {
+  const { drawer, loading } = useViewConfig();
 
   return (
     <Box sx={{ display: 'flex' }}>
