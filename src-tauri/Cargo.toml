@@ -1,6 +1,6 @@
 [package]
 name = "waview"
-version = "0.1.2"
+version = "0.1.3"
 description = "🌊 WaView - Simple and tiny CSV waveform viewer"
 authors = ["suous"]
 edition = "2021"
