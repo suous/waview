@@ -119,14 +119,16 @@ export default function Main(): React.JSX.Element {
     <Stack spacing={1}>
       {split && Object.keys(waveformOptions).length > 0 ? (
         <>
-          {filteredWaveformOptions.map((waveformOption, index) => (
-            <Chart
-              key={`waveform-plot-${index}`}
-              waveform={{ [waveformOption.label]: waveform[waveformOption.label] }}
-              options={getOptions(theme.palette.mode)}
-              waveformOptions={[waveformOption]}
-            />
-          ))}
+          {filteredWaveformOptions
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map((waveformOption, index) => (
+              <Chart
+                key={`waveform-plot-${index}`}
+                waveform={{ [waveformOption.label]: waveform[waveformOption.label] }}
+                options={getOptions(theme.palette.mode)}
+                waveformOptions={[waveformOption]}
+              />
+            ))}
         </>
       ) : (
         <Chart waveform={waveform} options={getOptions(theme.palette.mode)} waveformOptions={filteredWaveformOptions} />
