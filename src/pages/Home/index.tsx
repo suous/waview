@@ -8,8 +8,6 @@ import useTheme from '@mui/material/styles/useTheme';
 import { invoke } from '@tauri-apps/api/core';
 import { listen, TauriEvent } from '@tauri-apps/api/event';
 import { basename } from '@tauri-apps/api/path';
-import { getName } from '@tauri-apps/api/app';
-import { Menu, MenuItem, Submenu } from '@tauri-apps/api/menu';
 import { open } from '@tauri-apps/plugin-dialog';
 
 import Chart from './Chart';
@@ -70,45 +68,36 @@ export default function Main(): React.JSX.Element {
     }
   };
 
+  const handleFileDrop = async (event: { payload: { paths: string[] } }) => {
+    const paths = event.payload.paths.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
+    await processFiles(paths);
+  };
+
   const handleFileOpen = async () => {
     const paths = await open({ multiple: true, filters: [{ name: 'transient', extensions: ['csv', 'gz'] }] });
     if (Array.isArray(paths)) {
       await processFiles(paths);
     }
   };
-
-  const handleFileDrop = async (event: { payload: { paths: string[] } }) => {
-    const paths = event.payload.paths.filter(path => path.endsWith('.csv') || path.endsWith('.gz'));
-    await processFiles(paths);
-  };
-
   const handleSplit = () => updateSplit(!split);
   const handleDrawer = () => updateDrawer(!drawer);
   const handlePreference = () => updatePreference(!preference);
-  async function createMenu() {
-    const name = await getName();
-    const menu = await Menu.default();
-    const items = await menu.items();
-    const file = items[1] as Submenu;
-    const customs = [
-      await MenuItem.new({ id: `__${name}_pref`, text: 'Preference', accelerator: 'CmdOrCtrl+P', action: handlePreference }),
-      await MenuItem.new({ id: `__${name}_disp`, text: 'Display', accelerator: 'CmdOrCtrl+D', action: handleDrawer }),
-      await MenuItem.new({ id: `__${name}_split`, text: 'Split', accelerator: 'CmdOrCtrl+S', action: handleSplit }),
-      await MenuItem.new({ id: `__${name}_file`, text: 'File', accelerator: 'CmdOrCtrl+O', action: handleFileOpen })
-    ];
-    await file.prepend(customs);
-    await menu.removeAt(items.length - 1); // remove the help menu
-    menu.setAsAppMenu();
-  }
-  createMenu();
 
   React.useEffect(() => {
     const dropPromise = listen(TauriEvent.DRAG_DROP, handleFileDrop);
+    const openPromise = listen(`__file`, handleFileOpen);
+    const splitPromise = listen(`__split`, handleSplit);
+    const drawerPromise = listen(`__disp`, handleDrawer);
+    const preferencePromise = listen(`__pref`, handlePreference);
 
     return () => {
       dropPromise.then(unsubscribe => unsubscribe()).catch(console.error);
+      openPromise.then(unsubscribe => unsubscribe()).catch(console.error);
+      splitPromise.then(unsubscribe => unsubscribe()).catch(console.error);
+      drawerPromise.then(unsubscribe => unsubscribe()).catch(console.error);
+      preferencePromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  });
+  }, [split, drawer, preference]);
 
   const filteredWaveformOptions = React.useMemo(() => {
     return waveformOptions.filter(option => waveform[option.label]);
