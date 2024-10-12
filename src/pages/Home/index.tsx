@@ -7,11 +7,10 @@ import useTheme from '@mui/material/styles/useTheme';
 
 import { invoke } from '@tauri-apps/api/core';
 import { listen, TauriEvent } from '@tauri-apps/api/event';
-import { open } from '@tauri-apps/plugin-dialog';
 import { basename } from '@tauri-apps/api/path';
-
 import { getName } from '@tauri-apps/api/app';
 import { Menu, MenuItem, Submenu } from '@tauri-apps/api/menu';
+import { open } from '@tauri-apps/plugin-dialog';
 
 import Chart from './Chart';
 import { IWaveform, IFile } from '../../@types/model';
