@@ -20,9 +20,9 @@ import { useTranslation } from 'react-i18next';
 import { type ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
 import { ChartOptions } from 'chart.js';
 
-import { useToggle, base64ToUint8Array } from '../../utils';
-import useModelConfig from '../../../../stores/Model';
-import { IWaveformOptions } from '../../../../@types/model';
+import { useToggle, base64ToUint8Array } from '../../../utils';
+import useModelConfig from '../../../stores/Model.tsx';
+import { IWaveformOptions } from '@/types/model.ts';
 
 type ToolsButtonProps = IconButtonProps<'button', { title: string }>;
 

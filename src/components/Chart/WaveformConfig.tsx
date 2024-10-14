@@ -4,10 +4,10 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 
-import { IWaveformOptions } from '../../../../@types/model';
-import useModelConfig from '../../../../stores/Model';
-import CustomDialog from '../../../components/CustomDialog';
-import ChartConfig from './ChartConfig';
+import { IWaveformOptions } from '@/types/model.ts';
+import useModelConfig from '../../../stores/Model.tsx';
+import CustomDialog from '../../CustomDialog';
+import ChartConfig from './ChartConfig.tsx';
 
 interface Props {
   open: boolean;

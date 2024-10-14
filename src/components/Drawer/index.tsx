@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import ClearInput from '../ClearInput';
 import FileItem from './FileItem';
-import { useToggle } from '../../Home/utils';
+import { useToggle } from '../../../utils';
 import useViewConfig from '../../../stores/View';
 import useModelConfig from '../../../stores/Model';
 import { drawerWidth } from '../../constants';

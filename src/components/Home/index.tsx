@@ -9,11 +9,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import styled from '@mui/material/styles/styled';
 import { listen } from '@tauri-apps/api/event';
 
-import Main from './Home';
-import Drawer from './components/Drawer';
-import Preference from './components/Preference';
-import useViewConfig from '../stores/View';
-import { drawerWidth } from './constants';
+import Main from '@/components/Main';
+import Drawer from '@/components/Drawer';
+import Preference from '@/components/Preference';
+import useViewConfig from '@/stores/View';
+import { drawerWidth } from '@/utils';
 
 const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })<{
   open?: boolean;

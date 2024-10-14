@@ -20,7 +20,7 @@ import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import { useTranslation } from 'react-i18next';
 import { listen } from '@tauri-apps/api/event';
 
-import { ThemeMode } from '../../../@types/view';
+import { ThemeMode } from '@/types/view';
 import useViewConfig from '../../../stores/View';
 
 export default function Preference(): React.JSX.Element {
