@@ -18,7 +18,7 @@ import useViewConfig from '../../stores/View';
 
 export default function Main(): React.JSX.Element {
   const { addFiles, updateOpenedFile, waveform, updateWaveform, waveformOptions, addWaveformOptions } = useModelConfig();
-  const { split, drawer, preference, updateSplit, updateLoading, updateDrawer, updatePreference } = useViewConfig();
+  const { split, updateSplit, updateLoading } = useViewConfig();
   const theme = useTheme();
 
   const handleFiles = async (paths: string[]): Promise<IWaveform | undefined> => {
@@ -79,25 +79,22 @@ export default function Main(): React.JSX.Element {
       await processFiles(paths);
     }
   };
-  const handleSplit = () => updateSplit(!split);
-  const handleDrawer = () => updateDrawer(!drawer);
-  const handlePreference = () => updatePreference(!preference);
 
   React.useEffect(() => {
     const dropPromise = listen(TauriEvent.DRAG_DROP, handleFileDrop);
     const openPromise = listen(`__file`, handleFileOpen);
-    const splitPromise = listen(`__split`, handleSplit);
-    const drawerPromise = listen(`__disp`, handleDrawer);
-    const preferencePromise = listen(`__pref`, handlePreference);
-
     return () => {
       dropPromise.then(unsubscribe => unsubscribe()).catch(console.error);
       openPromise.then(unsubscribe => unsubscribe()).catch(console.error);
-      splitPromise.then(unsubscribe => unsubscribe()).catch(console.error);
-      drawerPromise.then(unsubscribe => unsubscribe()).catch(console.error);
-      preferencePromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  }, [split, drawer, preference]);
+  }, []);
+
+  React.useEffect(() => {
+    const splitPromise = listen(`__split`, () => updateSplit(!split));
+    return () => {
+      splitPromise.then(unsubscribe => unsubscribe()).catch(console.error);
+    };
+  }, [split]);
 
   const filteredWaveformOptions = React.useMemo(() => {
     return waveformOptions.filter(option => waveform[option.label]);

@@ -18,6 +18,7 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import { useTranslation } from 'react-i18next';
+import { listen } from '@tauri-apps/api/event';
 
 import { ThemeMode } from '../../../@types/view';
 import useViewConfig from '../../../stores/View';
@@ -26,6 +27,13 @@ export default function Preference(): React.JSX.Element {
   const { t, i18n } = useTranslation();
   const { theme, updateTheme, preference, updatePreference } = useViewConfig();
   const [language, setLanguage] = React.useState('en');
+
+  React.useEffect(() => {
+    const preferencePromise = listen(`__pref`, () => updatePreference(!preference));
+    return () => {
+      preferencePromise.then(unsubscribe => unsubscribe()).catch(console.error);
+    };
+  }, [preference]);
 
   const handleCancel = () => updatePreference(false);
 
