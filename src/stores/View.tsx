@@ -1,8 +1,8 @@
 /** @format */
 
 import * as React from 'react';
-import { ViewActionType, ViewContextType } from '../@types/view';
-import { createActionCreator, useConfig } from './Action';
+import { ViewActionType, ViewContextType } from '@/types/view';
+import { createActionCreator, useConfig } from '@/stores/Action.tsx';
 
 const initialState: ViewContextType = {
   preference: false,

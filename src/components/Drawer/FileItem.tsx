@@ -15,8 +15,8 @@ import { confirm } from '@tauri-apps/plugin-dialog';
 import { useTranslation } from 'react-i18next';
 
 import { IFile, IWaveform } from '@/types/model';
-import useModelConfig from '@/stores/model.tsx';
-import useViewConfig from '@/stores/view.tsx';
+import useModelConfig from '@/stores/Model';
+import useViewConfig from '@/stores/View';
 
 interface Props {
   file: IFile;

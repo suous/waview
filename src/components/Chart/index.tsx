@@ -7,10 +7,10 @@ import Stack from '@mui/material/Stack';
 import { ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-import ToolsSet from './components/ToolSet.tsx';
-import ToolMenu from './components/ToolMenu.tsx';
-import { IWaveform, IWaveformOptions } from '@/types/model.ts';
-import { useToggle, chartConfigs } from '../../../utils';
+import ToolsSet from '@/components/Chart/ToolSet';
+import ToolMenu from '@/components/Chart/ToolMenu';
+import { IWaveform, IWaveformOptions } from '@/types/model';
+import { useToggle, chartConfigs } from '@/utils';
 
 interface Props {
   waveform: IWaveform;

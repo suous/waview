@@ -11,10 +11,10 @@ import { basename } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/plugin-dialog';
 
 import Chart from '@/components/Chart';
-import { IWaveform, IFile } from '@/types/model.ts';
+import { IWaveform, IFile } from '@/types/model';
 import { getOptions, chartConfigs } from '@/utils';
-import useModelConfig from '@/stores/Model.tsx';
-import useViewConfig from '@/stores/View.tsx';
+import useModelConfig from '@/stores/Model';
+import useViewConfig from '@/stores/View';
 
 export default function Main(): React.JSX.Element {
   const { addFiles, updateOpenedFile, waveform, updateWaveform, waveformOptions, addWaveformOptions } = useModelConfig();

@@ -8,7 +8,7 @@ import pluginPrettier from 'eslint-plugin-prettier/recommended';
 
 export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
-  { ignores: ['src-tauri/*', 'node_modules/*', 'dist/*'] },
+  { ignores: ['src-tauri', 'node_modules', 'dist'] },
   { settings: { react: { version: 'detect' } } },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,

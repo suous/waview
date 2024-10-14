@@ -9,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import styled from '@mui/material/styles/styled';
 import { listen } from '@tauri-apps/api/event';
 
-import Main from '@/components/Main';
+import Main from '@/components/Home/Main';
 import Drawer from '@/components/Drawer';
 import Preference from '@/components/Preference';
 import useViewConfig from '@/stores/View';

@@ -1,8 +1,8 @@
 /** @format */
 
 import * as React from 'react';
-import { ViewActionType } from '../@types/view';
-import { ModelActionType } from '../@types/model';
+import { ViewActionType } from '@/types/view';
+import { ModelActionType } from '@/types/model';
 
 export function createActionCreator<ActionType extends ViewActionType | ModelActionType>(dispatch: React.Dispatch<ActionType>) {
   return React.useCallback(

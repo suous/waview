@@ -1,8 +1,8 @@
 /** @format */
 
 import * as React from 'react';
-import { ModelContextType, ModelActionType } from '../@types/model';
-import { createActionCreator, useConfig } from './Action';
+import { ModelContextType, ModelActionType } from '@/types/model';
+import { createActionCreator, useConfig } from '@/stores/Action.tsx';
 
 const initialState: ModelContextType = {
   files: [],

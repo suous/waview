@@ -12,8 +12,8 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import { useTranslation } from 'react-i18next';
 
-import { IWaveformOptions } from '@/types/model.ts';
-import { chartConfigs } from '../../../utils';
+import { IWaveformOptions } from '@/types/model';
+import { chartConfigs } from '@/utils';
 
 interface Props {
   waveformOption: IWaveformOptions;

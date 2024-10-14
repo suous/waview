@@ -7,9 +7,9 @@ import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import { emit } from '@tauri-apps/api/event';
 import { Menu, MenuItem, Submenu } from '@tauri-apps/api/menu';
 
-import Home from './pages';
-import useViewConfig from './stores/View';
-import { ModelProvider } from './stores/Model';
+import Home from '@/components/Home';
+import useViewConfig from '@/stores/View';
+import { ModelProvider } from '@/stores/Model';
 
 const createAppTheme = (mode: 'light' | 'dark') =>
   createTheme({
@@ -34,7 +34,7 @@ async function createMenu() {
   ];
   await file.prepend(customs);
   await menu.removeAt(items.length - 1); // remove the help menu
-  menu.setAsAppMenu();
+  await menu.setAsAppMenu();
 }
 createMenu().catch(console.error);
 

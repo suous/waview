@@ -7,6 +7,8 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 
 ChartJS.register(LinearScale, LineElement, PointElement, Tooltip, Legend, zoomPlugin);
 
+export const drawerWidth = 240;
+
 export const getOptions = (paletteMode: PaletteMode): ChartOptions<'line'> => {
   const lightColor = 'rgba(0, 0, 0, 0.5)';
   const darkColor = 'rgba(256, 256, 256, 0.5)';

@@ -14,10 +14,10 @@ import { writeTextFile } from '@tauri-apps/plugin-fs';
 import { dirname } from '@tauri-apps/api/path';
 import { useTranslation } from 'react-i18next';
 
-import { IWaveform, IWaveformOptions } from '@/types/model.ts';
-import WaveformConfig from './WaveformConfig.tsx';
-import useModelConfig from '../../../stores/Model.tsx';
-import { colToCSV } from '../../../utils';
+import { IWaveform, IWaveformOptions } from '@/types/model';
+import WaveformConfig from '@/components/Chart/WaveformConfig';
+import useModelConfig from '@/stores/Model';
+import { colToCSV } from '@/utils';
 
 interface Props {
   waveform: IWaveform;

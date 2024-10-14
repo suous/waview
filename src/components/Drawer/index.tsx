@@ -17,12 +17,11 @@ import Collapse from '@mui/material/Collapse';
 import { confirm } from '@tauri-apps/plugin-dialog';
 import { useTranslation } from 'react-i18next';
 
-import ClearInput from '../ClearInput';
-import FileItem from './FileItem';
-import { useToggle } from '../../../utils';
-import useViewConfig from '../../../stores/View';
-import useModelConfig from '../../../stores/Model';
-import { drawerWidth } from '../../constants';
+import ClearInput from '@/components/ClearInput';
+import FileItem from '@/components/Drawer/FileItem';
+import { useToggle, drawerWidth } from '@/utils';
+import useViewConfig from '@/stores/View.tsx';
+import useModelConfig from '@/stores/Model.tsx';
 
 export default function ClippedDrawer(): React.JSX.Element {
   const { t } = useTranslation();
