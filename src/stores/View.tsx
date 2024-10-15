@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ViewActionType, ViewContextType } from '@/types/view';
-import { createActionCreator, useConfig } from '@/stores/Action.tsx';
+import { useActionCreator, useConfig } from '@/stores/Action.tsx';
 
 const initialState: ViewContextType = {
   preference: false,
@@ -25,7 +25,7 @@ const ViewContext = React.createContext<ViewContextType>(initialState);
 
 export function ViewProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [state, dispatch] = React.useReducer(ViewReducer, initialState);
-  const createAction = createActionCreator<ViewActionType>(dispatch);
+  const createAction = useActionCreator<ViewActionType>(dispatch);
   const value = {
     ...state,
     updatePreference: createAction('UPDATE_PREFERENCE'),
@@ -38,6 +38,7 @@ export function ViewProvider({ children }: { children: React.ReactNode }): JSX.E
   return <ViewContext.Provider value={value}>{children}</ViewContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default function useViewConfig(): ViewContextType {
   return useConfig(ViewContext, 'view');
 }

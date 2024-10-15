@@ -33,7 +33,7 @@ export default function Preference(): React.JSX.Element {
     return () => {
       preferencePromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  }, [preference]);
+  }, [preference, updatePreference]);
 
   const handleCancel = () => updatePreference(false);
 

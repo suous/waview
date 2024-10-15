@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ModelContextType, ModelActionType } from '@/types/model';
-import { createActionCreator, useConfig } from '@/stores/Action.tsx';
+import { useActionCreator, useConfig } from '@/stores/Action.tsx';
 
 const initialState: ModelContextType = {
   files: [],
@@ -59,7 +59,7 @@ const ModelContext = React.createContext<ModelContextType>(initialState);
 
 export function ModelProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [state, dispatch] = React.useReducer(ModelReducer, initialState);
-  const createAction = createActionCreator<ModelActionType>(dispatch);
+  const createAction = useActionCreator<ModelActionType>(dispatch);
 
   const value = React.useMemo(
     () => ({
@@ -78,6 +78,7 @@ export function ModelProvider({ children }: { children: React.ReactNode }): JSX.
   return <ModelContext.Provider value={value}>{children}</ModelContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default function useModelConfig(): ModelContextType {
   return useConfig(ModelContext, 'model');
 }

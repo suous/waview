@@ -35,7 +35,7 @@ export default function Home(): React.JSX.Element {
     return () => {
       drawerPromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  }, [drawer]);
+  }, [drawer, updateDrawer]);
 
   return (
     <Box sx={{ display: 'flex' }}>
