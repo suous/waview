@@ -1,7 +1,8 @@
 /** @format */
 
 import * as React from 'react';
-import { PaletteMode } from '@mui/material';
+import { Theme } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import { ChartOptions, Chart as ChartJS, LinearScale, LineElement, PointElement, Tooltip, Legend } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
@@ -9,12 +10,8 @@ ChartJS.register(LinearScale, LineElement, PointElement, Tooltip, Legend, zoomPl
 
 export const drawerWidth = 240;
 
-export const getOptions = (paletteMode: PaletteMode): ChartOptions<'line'> => {
-  const lightColor = 'rgba(0, 0, 0, 0.5)';
-  const darkColor = 'rgba(256, 256, 256, 0.5)';
-  const gridColor = paletteMode === 'light' ? 'rgba(128, 128, 128, 0.5)' : darkColor;
-  const tickColor = paletteMode === 'light' ? lightColor : darkColor;
-  const backgroundColor = paletteMode === 'light' ? 'rgba(0, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.1)';
+export const getOptions = (theme: Theme): ChartOptions<'line'> => {
+  const backgroundColor = theme.palette.background.default;
 
   const tickCallback = (value: number | string) => {
     if (typeof value === 'number') {
@@ -25,8 +22,8 @@ export const getOptions = (paletteMode: PaletteMode): ChartOptions<'line'> => {
 
   const axisConfig = {
     border: { display: false, dash: [4, 4] },
-    grid: { display: true, drawOnChartArea: true, drawTicks: false, color: gridColor },
-    ticks: { color: tickColor, padding: 0, minRotation: 0, maxRotation: 0, callback: tickCallback }
+    grid: { display: true, drawOnChartArea: true, drawTicks: false, color: alpha(theme.palette.divider, 0.3) },
+    ticks: { color: theme.palette.text.secondary, padding: 0, minRotation: 0, maxRotation: 0, callback: tickCallback }
   };
 
   return {
@@ -65,7 +62,7 @@ export const getOptions = (paletteMode: PaletteMode): ChartOptions<'line'> => {
         labels: {
           boxWidth: 6,
           boxHeight: 6,
-          color: paletteMode === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(256, 256, 256, 0.7)'
+          color: theme.palette.text.secondary
         }
       },
       decimation: {
@@ -89,7 +86,7 @@ export const getOptions = (paletteMode: PaletteMode): ChartOptions<'line'> => {
           },
           drag: {
             enabled: false,
-            backgroundColor: paletteMode === 'light' ? 'rgba(128, 128, 128, 0.3)' : 'rgba(256, 256, 256, 0.3)'
+            backgroundColor: alpha(theme.palette.divider, 0.16)
           },
           mode: 'xy'
         }

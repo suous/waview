@@ -110,13 +110,13 @@ export default function Main(): React.JSX.Element {
               <Chart
                 key={`waveform-plot-${index}`}
                 waveform={{ [waveformOption.label]: waveform[waveformOption.label] }}
-                options={getOptions(theme.palette.mode)}
+                options={getOptions(theme)}
                 waveformOptions={[waveformOption]}
               />
             ))}
         </>
       ) : (
-        <Chart waveform={waveform} options={getOptions(theme.palette.mode)} waveformOptions={filteredWaveformOptions} />
+        <Chart waveform={waveform} options={getOptions(theme)} waveformOptions={filteredWaveformOptions} />
       )}
     </Stack>
   );
