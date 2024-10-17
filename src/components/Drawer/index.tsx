@@ -17,7 +17,7 @@ import Collapse from '@mui/material/Collapse';
 import { confirm } from '@tauri-apps/plugin-dialog';
 import { useTranslation } from 'react-i18next';
 
-import ClearInput from '@/components/ClearInput';
+import Search from '@/components/Search';
 import FileItem from '@/components/Drawer/FileItem';
 import { useToggle, drawerWidth } from '@/utils';
 import useViewConfig from '@/stores/View.tsx';
@@ -51,7 +51,7 @@ export default function ClippedDrawer(): React.JSX.Element {
         overflowX: 'auto'
       }}>
       <Box sx={{ minWidth: 'fit-content' }}>
-        <ClearInput
+        <Search
           onClick={() => setFilter('')}
           onChange={e => setFilter(e.target.value)}
           value={filter}

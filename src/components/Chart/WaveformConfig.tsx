@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { IWaveformOptions } from '@/types/model';
 import useModelConfig from '@/stores/Model.tsx';
-import CustomDialog from '@/components/CustomDialog';
+import Modal from '@/components/Modal';
 import ChartConfig from '@/components/Chart/ChartConfig';
 
 interface Props {
@@ -25,17 +25,12 @@ export default function WaveformConfig({ open, setOpen, waveformOptions }: Props
   };
 
   return (
-    <CustomDialog
-      open={open}
-      handleCancel={() => setOpen(false)}
-      handleEnsure={handleEnsure}
-      title={t('Chart Config')}
-      label={t('OK')}>
+    <Modal open={open} handleCancel={() => setOpen(false)} handleEnsure={handleEnsure} title={t('Chart Config')} label={t('OK')}>
       <Stack spacing={1} sx={{ width: 430 }}>
         {waveformOptions.map((waveformOption, index) => (
           <ChartConfig key={`waveform_line_config_${index}`} waveformOption={waveformOption} />
         ))}
       </Stack>
-    </CustomDialog>
+    </Modal>
   );
 }

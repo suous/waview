@@ -15,7 +15,7 @@ interface Props extends Pick<OutlinedInputProps, 'placeholder' | 'onChange' | 's
   sxForm?: SxProps<Theme>;
 }
 
-export default function ClearInput({ value, placeholder, onChange, onClick, sx, sxForm = null }: Props): React.JSX.Element {
+export default function Search({ value, placeholder, onChange, onClick, sx, sxForm = null }: Props): React.JSX.Element {
   return (
     <FormControl fullWidth margin='none' sx={sxForm}>
       <OutlinedInput
