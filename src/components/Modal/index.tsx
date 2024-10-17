@@ -2,23 +2,18 @@
 
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material';
 
-type Props = React.PropsWithChildren<{
-  open: boolean;
-  title: string;
+interface Props extends Pick<DialogProps, 'open' | 'children' | 'sx' | 'title'> {
   label: string;
   handleEnsure: () => void;
   handleCancel: () => void;
-  sx?: SxProps<Theme>;
-}>;
+}
 
 export default function Modal({ open, title, label, children, handleEnsure, handleCancel, sx = null }: Props): React.JSX.Element {
   return (
