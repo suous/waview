@@ -9,22 +9,18 @@ import FormControl from '@mui/material/FormControl';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material';
 
-interface Props extends Pick<OutlinedInputProps, 'placeholder' | 'onChange' | 'sx'> {
-  value: string;
+interface Props extends OutlinedInputProps {
   onClick: () => void;
   sxForm?: SxProps<Theme>;
 }
 
-export default function Search({ value, placeholder, onChange, onClick, sx, sxForm = null }: Props): React.JSX.Element {
+export default function Search({ onClick, sxForm = null, ...props }: Props): React.JSX.Element {
   return (
     <FormControl fullWidth margin='none' sx={sxForm}>
       <OutlinedInput
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        sx={sx}
+        {...props}
         endAdornment={
-          value.length > 0 && (
+          (props.value as string).length > 0 && (
             <InputAdornment position='end'>
               <IconButton onClick={onClick} edge='end'>
                 <CloseRoundedIcon />
