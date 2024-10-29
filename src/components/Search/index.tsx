@@ -20,13 +20,11 @@ export default function Search({ onClick, sxForm = null, ...props }: Props): Rea
       <OutlinedInput
         {...props}
         endAdornment={
-          (props.value as string).length > 0 && (
-            <InputAdornment position='end'>
-              <IconButton onClick={onClick} edge='end'>
-                <CloseRoundedIcon />
-              </IconButton>
-            </InputAdornment>
-          )
+          <InputAdornment position='end' sx={{ visibility: props.value ? 'visible' : 'hidden' }}>
+            <IconButton onClick={onClick} edge='end'>
+              <CloseRoundedIcon />
+            </IconButton>
+          </InputAdornment>
         }
       />
     </FormControl>
