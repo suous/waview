@@ -17,18 +17,14 @@ import { dirname } from '@tauri-apps/api/path';
 import { writeFile } from '@tauri-apps/plugin-fs';
 import { useTranslation } from 'react-i18next';
 // @ts-expect-error it exist
-import { type ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
-import { ChartOptions } from 'chart.js';
+import { type ChartJSOrUndefined, type TypedChartComponent } from 'react-chartjs-2/dist/types';
 
 import { useToggle, base64ToUint8Array } from '@/utils';
 import useModelConfig from '@/stores/Model';
 import { IWaveformOptions } from '@/types/model';
 
-type ToolsButtonProps = IconButtonProps<'button', { title: string }>;
-
-interface Props {
+interface Props extends Pick<TypedChartComponent<'line'>, 'options'> {
   chartRef: React.RefObject<ChartJSOrUndefined<'line', Array<Record<string, number>>>>;
-  options: ChartOptions<'line'>;
   waveformOptions: IWaveformOptions[];
   fullScreen: boolean;
   toggleFullScreen: () => void;
@@ -125,7 +121,7 @@ export default function ToolsSet({ chartRef, options, waveformOptions, fullScree
     }
   });
 
-  const tools: ToolsButtonProps[] = [
+  const tools: IconButtonProps[] = [
     {
       title: t('Zoom XY'),
       color: dragColor('xy'),

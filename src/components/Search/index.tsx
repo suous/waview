@@ -6,12 +6,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import FormControl from '@mui/material/FormControl';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material';
 
 interface Props extends Omit<OutlinedInputProps, 'endAdornment'> {
   onClick: () => void;
-  sxForm?: SxProps<Theme>;
+  sxForm?: OutlinedInputProps['sx'];
 }
 
 export default function Search({ onClick, sxForm = null, ...props }: Props): React.JSX.Element {
