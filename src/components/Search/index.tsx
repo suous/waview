@@ -9,7 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material';
 
-interface Props extends OutlinedInputProps {
+interface Props extends Omit<OutlinedInputProps, 'endAdornment'> {
   onClick: () => void;
   sxForm?: SxProps<Theme>;
 }
