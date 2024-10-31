@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Theme } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { ChartOptions, Chart as ChartJS, LinearScale, LineElement, PointElement, Tooltip, Legend } from 'chart.js';
+import { type ChartOptions, Chart as ChartJS, LinearScale, LineElement, PointElement, Tooltip, Legend } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
 ChartJS.register(LinearScale, LineElement, PointElement, Tooltip, Legend, zoomPlugin);

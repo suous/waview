@@ -10,7 +10,6 @@ import Tooltip from '@mui/material/Tooltip';
 import PlaylistRemoveRoundedIcon from '@mui/icons-material/PlaylistRemoveRounded';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
@@ -63,16 +62,16 @@ export default function ClippedDrawer(): React.JSX.Element {
           <ListItem
             disablePadding
             secondaryAction={
-              open && (
-                <Tooltip title={t('Clear History')} enterDelay={1000}>
-                  <IconButton edge='end' onClick={handleClearFiles}>
-                    <PlaylistRemoveRoundedIcon />
-                  </IconButton>
-                </Tooltip>
-              )
+              <Tooltip title={t('Clear History')} enterDelay={1000}>
+                <IconButton edge='end' onClick={handleClearFiles} sx={{ visibility: open ? 'visible' : 'hidden' }}>
+                  <PlaylistRemoveRoundedIcon />
+                </IconButton>
+              </Tooltip>
             }>
             <ListItemButton dense sx={{ paddingLeft: 0 }} disableGutters onClick={toggleOpen}>
-              <ListItemIcon sx={{ minWidth: 24 }}>{open ? <ArrowDropDownRoundedIcon /> : <ArrowRightRoundedIcon />}</ListItemIcon>
+              <ListItemIcon sx={{ minWidth: 24 }}>
+                <ArrowRightRoundedIcon sx={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+              </ListItemIcon>
               <ListItemText primary={t('Imported Files')} />
             </ListItemButton>
           </ListItem>

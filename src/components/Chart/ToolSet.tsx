@@ -10,7 +10,7 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import FullscreenExitRoundedIcon from '@mui/icons-material/FullscreenExitRounded';
 import FullscreenRoundedIcon from '@mui/icons-material/FullscreenRounded';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { save } from '@tauri-apps/plugin-dialog';
 import { dirname } from '@tauri-apps/api/path';
