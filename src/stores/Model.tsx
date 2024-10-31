@@ -61,19 +61,16 @@ export function ModelProvider({ children }: { children: React.ReactNode }): JSX.
   const [state, dispatch] = React.useReducer(ModelReducer, initialState);
   const createAction = useActionCreator<ModelActionType>(dispatch);
 
-  const value = React.useMemo(
-    () => ({
-      ...state,
-      addFiles: createAction('ADD_FILES'),
-      deleteFile: createAction('DELETE_FILE'),
-      clearFiles: createAction('CLEAR_FILES'),
-      updateOpenedFile: createAction('UPDATE_OPENED_FILE'),
-      updateWaveform: createAction('UPDATE_WAVEFORM'),
-      addWaveformOptions: createAction('ADD_WAVEFORM_OPTIONS'),
-      updateWaveformOptions: createAction('UPDATE_WAVEFORM_OPTIONS')
-    }),
-    [state, createAction]
-  );
+  const value = {
+    ...state,
+    addFiles: createAction('ADD_FILES'),
+    deleteFile: createAction('DELETE_FILE'),
+    clearFiles: createAction('CLEAR_FILES'),
+    updateOpenedFile: createAction('UPDATE_OPENED_FILE'),
+    updateWaveform: createAction('UPDATE_WAVEFORM'),
+    addWaveformOptions: createAction('ADD_WAVEFORM_OPTIONS'),
+    updateWaveformOptions: createAction('UPDATE_WAVEFORM_OPTIONS')
+  };
 
   return <ModelContext.Provider value={value}>{children}</ModelContext.Provider>;
 }
