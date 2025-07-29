@@ -20,17 +20,13 @@ interface Props {
 
 export default function Chart({ waveform, options, waveformOptions }: Props): React.JSX.Element {
   const [fullScreen, toggleFullScreen] = useToggle(false);
-  const chartRef = React.useRef();
-  const datasets = React.useMemo(
-    () =>
-      waveformOptions.map(({ label, lineStyle, ...elementOptions }) => ({
-        label,
-        data: waveform[label].map((y, x) => ({ x, y })),
-        borderDash: chartConfigs.lineStyles.get(lineStyle),
-        ...elementOptions
-      })),
-    [waveform, waveformOptions]
-  );
+  const chartRef = React.useRef(null);
+  const datasets = waveformOptions.map(({ label, lineStyle, ...elementOptions }) => ({
+    label,
+    data: waveform[label].map((y, x) => ({ x, y })),
+    borderDash: chartConfigs.lineStyles.get(lineStyle),
+    ...elementOptions
+  }));
 
   const height = fullScreen || waveformOptions.length !== 1 ? 'calc(99vh - 12px)' : '48vh';
   return (

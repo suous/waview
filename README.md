@@ -8,7 +8,7 @@
     Simple And Tiny CSV Waveform Viewer
   </h3>
   <p align="center">
-    Built with <a href="https://tauri.app">Tauri 2</a> and <a href="https://mui.com">MUI 6</a> to inspect waveforms in CSV files. <br />
+    Built with <a href="https://tauri.app">Tauri 2</a> and <a href="https://mui.com">MUI</a> to inspect waveforms in CSV files. <br />
     Optimized for minimal size and waveform rendering. 
   </p>
   <img src="docs/static/screen.png" alt="waview-screen" />

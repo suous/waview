@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import Stack from '@mui/material/Stack';
-import useTheme from '@mui/material/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 
 import { invoke } from '@tauri-apps/api/core';
 import { listen, TauriEvent } from '@tauri-apps/api/event';
@@ -96,9 +96,7 @@ export default function Main(): React.JSX.Element {
     };
   }, [split, updateSplit]);
 
-  const filteredWaveformOptions = React.useMemo(() => {
-    return waveformOptions.filter(option => waveform[option.label]);
-  }, [waveform, waveformOptions]);
+  const filteredWaveformOptions = waveformOptions.filter(option => waveform[option.label]);
 
   return (
     <Stack spacing={1}>

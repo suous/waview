@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import styled from '@mui/material/styles/styled';
+import { styled } from '@mui/material/styles';
 import { listen } from '@tauri-apps/api/event';
 
 import Main from '@/components/Home/Main';

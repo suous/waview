@@ -72,7 +72,7 @@ export function ModelProvider({ children }: { children: React.ReactNode }): JSX.
     updateWaveformOptions: createAction('UPDATE_WAVEFORM_OPTIONS')
   };
 
-  return <ModelContext.Provider value={value}>{children}</ModelContext.Provider>;
+  return <ModelContext value={value}>{children}</ModelContext>;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

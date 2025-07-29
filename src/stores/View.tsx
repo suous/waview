@@ -7,7 +7,7 @@ import { useActionCreator, useConfig } from '@/stores/Action.tsx';
 const initialState: ViewContextType = {
   preference: false,
   drawer: false,
-  split: true,
+  split: false,
   loading: false,
   theme: 'system',
   updatePreference: () => {},
@@ -35,7 +35,7 @@ export function ViewProvider({ children }: { children: React.ReactNode }): JSX.E
     updateTheme: createAction('UPDATE_THEME')
   };
 
-  return <ViewContext.Provider value={value}>{children}</ViewContext.Provider>;
+  return <ViewContext value={value}>{children}</ViewContext>;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

@@ -29,11 +29,11 @@ export default function Preference(): React.JSX.Element {
   const [language, setLanguage] = React.useState('en');
 
   React.useEffect(() => {
-    const preferencePromise = listen(`__pref`, () => updatePreference(!preference));
+    const preferencePromise = listen('__pref', () => updatePreference(!preference));
     return () => {
       preferencePromise.then(unsubscribe => unsubscribe()).catch(console.error);
     };
-  }, [preference, updatePreference]);
+  });
 
   const handleCancel = () => updatePreference(false);
 

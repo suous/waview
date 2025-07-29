@@ -2,8 +2,7 @@
 
 import * as React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import createTheme from '@mui/material/styles/createTheme';
-import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { emit } from '@tauri-apps/api/event';
 import { Menu, MenuItem, Submenu } from '@tauri-apps/api/menu';
 
@@ -27,10 +26,10 @@ async function createMenu() {
   const items = await menu.items();
   const file = items[1] as Submenu;
   const customs = [
-    await MenuItem.new({ id: `__pref`, text: 'Preference', accelerator: 'CmdOrCtrl+P', action: emit }),
-    await MenuItem.new({ id: `__disp`, text: 'Display', accelerator: 'CmdOrCtrl+D', action: emit }),
-    await MenuItem.new({ id: `__split`, text: 'Split', accelerator: 'CmdOrCtrl+S', action: emit }),
-    await MenuItem.new({ id: `__file`, text: 'File', accelerator: 'CmdOrCtrl+O', action: emit })
+    await MenuItem.new({ id: '__pref', text: 'Preference', accelerator: 'CmdOrCtrl+P', action: emit }),
+    await MenuItem.new({ id: '__disp', text: 'Display', accelerator: 'CmdOrCtrl+D', action: emit }),
+    await MenuItem.new({ id: '__split', text: 'Split', accelerator: 'CmdOrCtrl+S', action: emit }),
+    await MenuItem.new({ id: '__file', text: 'File', accelerator: 'CmdOrCtrl+O', action: emit })
   ];
   await file.prepend(customs);
   await menu.removeAt(items.length - 1); // remove the help menu
@@ -43,7 +42,7 @@ export default function App(): React.JSX.Element {
   const { theme } = useViewConfig();
 
   const systemTheme = prefersDarkMode ? 'dark' : 'light';
-  const defaultTheme = React.useMemo(() => createAppTheme(theme === 'system' ? systemTheme : theme), [systemTheme, theme]);
+  const defaultTheme = createAppTheme(theme === 'system' ? systemTheme : theme);
 
   return (
     <ThemeProvider theme={defaultTheme}>
