@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 import { IWaveform, IWaveformOptions } from '@/types/model';
 import WaveformConfig from '@/components/Chart/WaveformConfig';
-import useModelConfig from '@/stores/Model';
+import { ModelContext } from '@/stores/Model';
 import { colToCSV } from '@/utils';
 
 interface Props {
@@ -26,7 +26,7 @@ interface Props {
 
 export default function ToolMenu({ waveform, waveformOptions }: Props): JSX.Element {
   const { t } = useTranslation();
-  const { openedFile } = useModelConfig();
+  const { openedFile } = React.use(ModelContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [configOpen, setConfigOpen] = React.useState(false);
 

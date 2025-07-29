@@ -21,11 +21,11 @@ import { useTranslation } from 'react-i18next';
 import { listen } from '@tauri-apps/api/event';
 
 import { ThemeMode } from '@/types/view';
-import useViewConfig from '@/stores/View';
+import { ViewContext } from '@/stores/View';
 
 export default function Preference(): React.JSX.Element {
   const { t, i18n } = useTranslation();
-  const { theme, updateTheme, preference, updatePreference } = useViewConfig();
+  const { theme, updateTheme, preference, updatePreference } = React.use(ViewContext);
   const [language, setLanguage] = React.useState('en');
 
   React.useEffect(() => {

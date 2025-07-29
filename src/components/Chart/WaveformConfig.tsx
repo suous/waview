@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 
 import { IWaveformOptions } from '@/types/model';
-import useModelConfig from '@/stores/Model.tsx';
+import { ModelContext } from '@/stores/Model';
 import Modal from '@/components/Modal';
 import ChartConfig from '@/components/Chart/ChartConfig';
 
@@ -17,7 +17,7 @@ interface Props {
 
 export default function WaveformConfig({ open, setOpen, waveformOptions }: Props): React.JSX.Element {
   const { t } = useTranslation();
-  const { updateWaveformOptions } = useModelConfig();
+  const { updateWaveformOptions } = React.use(ModelContext);
 
   const handleEnsure = () => {
     updateWaveformOptions(waveformOptions);

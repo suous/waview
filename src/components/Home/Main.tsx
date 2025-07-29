@@ -13,12 +13,12 @@ import { open } from '@tauri-apps/plugin-dialog';
 import Chart from '@/components/Chart';
 import { IWaveform, IFile } from '@/types/model';
 import { getOptions, chartConfigs } from '@/utils';
-import useModelConfig from '@/stores/Model';
-import useViewConfig from '@/stores/View';
+import { ViewContext } from '@/stores/View';
+import { ModelContext } from '@/stores/Model';
 
 export default function Main(): React.JSX.Element {
-  const { addFiles, updateOpenedFile, waveform, updateWaveform, waveformOptions, addWaveformOptions } = useModelConfig();
-  const { split, updateSplit, updateLoading } = useViewConfig();
+  const { addFiles, updateOpenedFile, waveform, updateWaveform, waveformOptions, addWaveformOptions } = React.use(ModelContext);
+  const { split, updateSplit, updateLoading } = React.use(ViewContext);
   const theme = useTheme();
 
   const handleFiles = async (paths: string[]): Promise<IWaveform | undefined> => {
@@ -96,22 +96,22 @@ export default function Main(): React.JSX.Element {
     };
   }, [split, updateSplit]);
 
-  const filteredWaveformOptions = waveformOptions.filter(option => waveform[option.label]);
+  const filteredWaveformOptions = waveformOptions
+    .filter(option => waveform[option.label])
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   return (
     <Stack spacing={1}>
       {split && Object.keys(waveformOptions).length > 0 ? (
         <>
-          {filteredWaveformOptions
-            .sort((a, b) => a.label.localeCompare(b.label))
-            .map((waveformOption, index) => (
-              <Chart
-                key={`waveform-plot-${index}`}
-                waveform={{ [waveformOption.label]: waveform[waveformOption.label] }}
-                options={getOptions(theme)}
-                waveformOptions={[waveformOption]}
-              />
-            ))}
+          {filteredWaveformOptions.map((waveformOption, index) => (
+            <Chart
+              key={`waveform-plot-${index}`}
+              waveform={{ [waveformOption.label]: waveform[waveformOption.label] }}
+              options={getOptions(theme)}
+              waveformOptions={[waveformOption]}
+            />
+          ))}
         </>
       ) : (
         <Chart waveform={waveform} options={getOptions(theme)} waveformOptions={filteredWaveformOptions} />

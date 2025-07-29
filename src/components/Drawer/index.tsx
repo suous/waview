@@ -19,13 +19,13 @@ import { useTranslation } from 'react-i18next';
 import Search from '@/components/Search';
 import FileItem from '@/components/Drawer/FileItem';
 import { useToggle, drawerWidth } from '@/utils';
-import useViewConfig from '@/stores/View.tsx';
-import useModelConfig from '@/stores/Model.tsx';
+import { ViewContext } from '@/stores/View';
+import { ModelContext } from '@/stores/Model';
 
 export default function ClippedDrawer(): React.JSX.Element {
   const { t } = useTranslation();
-  const { drawer } = useViewConfig();
-  const { files, openedFile, clearFiles } = useModelConfig();
+  const { drawer } = React.use(ViewContext);
+  const { files, openedFile, clearFiles } = React.use(ModelContext);
   const [filter, setFilter] = React.useState('');
   const [open, toggleOpen] = useToggle(files.length > 0);
 

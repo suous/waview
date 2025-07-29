@@ -12,11 +12,3 @@ export function useActionCreator<ActionType extends ViewActionType | ModelAction
     [dispatch]
   );
 }
-
-export function useConfig<T>(Context: React.Context<T>, name: string): T {
-  const context = React.useContext(Context);
-  if (context === undefined) {
-    throw new Error(`${name}Context must be used within ${name}Provider`);
-  }
-  return context;
-}

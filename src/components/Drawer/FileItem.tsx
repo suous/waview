@@ -15,8 +15,8 @@ import { confirm } from '@tauri-apps/plugin-dialog';
 import { useTranslation } from 'react-i18next';
 
 import { IFile, IWaveform } from '@/types/model';
-import useModelConfig from '@/stores/Model';
-import useViewConfig from '@/stores/View';
+import { ModelContext } from '@/stores/Model';
+import { ViewContext } from '@/stores/View';
 
 interface Props {
   file: IFile;
@@ -25,8 +25,8 @@ interface Props {
 
 export default function FileItem({ file, underAnalysis }: Props): React.JSX.Element {
   const { t } = useTranslation();
-  const { updateOpenedFile, updateWaveform, deleteFile } = useModelConfig();
-  const { updateLoading } = useViewConfig();
+  const { updateOpenedFile, updateWaveform, deleteFile } = React.use(ModelContext);
+  const { updateLoading } = React.use(ViewContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const openContextMenu = (e: React.MouseEvent<HTMLElement>): void => {

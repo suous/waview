@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ViewActionType, ViewContextType } from '@/types/view';
-import { useActionCreator, useConfig } from '@/stores/Action.tsx';
+import { useActionCreator } from '@/stores/Action';
 
 const initialState: ViewContextType = {
   preference: false,
@@ -21,7 +21,8 @@ function ViewReducer(state: ViewContextType, action: ViewActionType): ViewContex
   return { ...state, [action.type.split('_')[1].toLowerCase()]: action.payload };
 }
 
-const ViewContext = React.createContext<ViewContextType>(initialState);
+// eslint-disable-next-line react-refresh/only-export-components
+export const ViewContext = React.createContext<ViewContextType>(initialState);
 
 export function ViewProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [state, dispatch] = React.useReducer(ViewReducer, initialState);
@@ -36,9 +37,4 @@ export function ViewProvider({ children }: { children: React.ReactNode }): JSX.E
   };
 
   return <ViewContext value={value}>{children}</ViewContext>;
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export default function useViewConfig(): ViewContextType {
-  return useConfig(ViewContext, 'view');
 }

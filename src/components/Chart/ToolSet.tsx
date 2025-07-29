@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { type ChartJSOrUndefined, type TypedChartComponent } from 'react-chartjs-2/dist/types';
 
 import { useToggle, base64ToUint8Array } from '@/utils';
-import useModelConfig from '@/stores/Model';
+import { ModelContext } from '@/stores/Model';
 import { IWaveformOptions } from '@/types/model';
 
 interface Props extends Pick<TypedChartComponent<'line'>, 'options'> {
@@ -31,7 +31,7 @@ interface Props extends Pick<TypedChartComponent<'line'>, 'options'> {
 }
 
 export default function ToolsSet({ chartRef, options, waveformOptions, fullScreen, toggleFullScreen }: Props): React.JSX.Element {
-  const { openedFile } = useModelConfig();
+  const { openedFile } = React.use(ModelContext);
   const [, toggleUpdate] = useToggle(false);
   const { t } = useTranslation();
 

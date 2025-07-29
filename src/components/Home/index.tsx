@@ -12,8 +12,8 @@ import { listen } from '@tauri-apps/api/event';
 import Main from '@/components/Home/Main';
 import Drawer from '@/components/Drawer';
 import Preference from '@/components/Preference';
-import useViewConfig from '@/stores/View';
 import { drawerWidth } from '@/utils';
+import { ViewContext } from '@/stores/View';
 
 const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })<{
   open?: boolean;
@@ -28,7 +28,7 @@ const Container = styled('main', { shouldForwardProp: prop => prop !== 'open' })
 }));
 
 export default function Home(): React.JSX.Element {
-  const { drawer, loading, updateDrawer } = useViewConfig();
+  const { drawer, loading, updateDrawer } = React.use(ViewContext);
 
   React.useEffect(() => {
     const drawerPromise = listen(`__disp`, () => updateDrawer(!drawer));

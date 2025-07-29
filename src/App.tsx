@@ -7,7 +7,7 @@ import { emit } from '@tauri-apps/api/event';
 import { Menu, MenuItem, Submenu } from '@tauri-apps/api/menu';
 
 import Home from '@/components/Home';
-import useViewConfig from '@/stores/View';
+import { ViewContext } from '@/stores/View';
 import { ModelProvider } from '@/stores/Model';
 
 const createAppTheme = (mode: 'light' | 'dark') =>
@@ -39,7 +39,7 @@ createMenu().catch(console.error);
 
 export default function App(): React.JSX.Element {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const { theme } = useViewConfig();
+  const { theme } = React.use(ViewContext);
 
   const systemTheme = prefersDarkMode ? 'dark' : 'light';
   const defaultTheme = createAppTheme(theme === 'system' ? systemTheme : theme);
