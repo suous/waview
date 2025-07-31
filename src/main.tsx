@@ -6,9 +6,9 @@ import ReactDOM from 'react-dom/client';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import App from './App';
-import resources from './locales/resources';
-import { ViewProvider } from './stores/View';
+import App from '@/App';
+import resources from '@/locales/resources';
+import { ViewProvider } from '@/stores/View';
 
 i18n
   .use(initReactI18next)

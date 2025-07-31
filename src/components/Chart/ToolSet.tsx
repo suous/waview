@@ -121,6 +121,7 @@ export default function ToolsSet({ chartRef, options, waveformOptions, fullScree
     }
   });
 
+  // TODO: After updating packages, Zoom XY, Zoom X, and Zoom Y fail to work correctly when plotting fewer than 2 lines.
   const tools: IconButtonProps[] = [
     {
       title: t('Zoom XY'),

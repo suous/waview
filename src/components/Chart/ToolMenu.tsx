@@ -24,7 +24,7 @@ interface Props {
   waveformOptions: IWaveformOptions[];
 }
 
-export default function ToolMenu({ waveform, waveformOptions }: Props): JSX.Element {
+export default function ToolMenu({ waveform, waveformOptions }: Props): React.JSX.Element {
   const { t } = useTranslation();
   const { openedFile } = React.use(ModelContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

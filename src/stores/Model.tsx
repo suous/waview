@@ -58,7 +58,7 @@ function ModelReducer(state: ModelContextType, action: ModelActionType): ModelCo
 // eslint-disable-next-line react-refresh/only-export-components
 export const ModelContext = React.createContext<ModelContextType>(initialState);
 
-export function ModelProvider({ children }: { children: React.ReactNode }): JSX.Element {
+export function ModelProvider({ children }: { children: React.ReactNode }): React.JSX.Element {
   const [state, dispatch] = React.useReducer(ModelReducer, initialState);
   const createAction = useActionCreator<ModelActionType>(dispatch);
 

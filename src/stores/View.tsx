@@ -24,7 +24,7 @@ function ViewReducer(state: ViewContextType, action: ViewActionType): ViewContex
 // eslint-disable-next-line react-refresh/only-export-components
 export const ViewContext = React.createContext<ViewContextType>(initialState);
 
-export function ViewProvider({ children }: { children: React.ReactNode }): JSX.Element {
+export function ViewProvider({ children }: { children: React.ReactNode }): React.JSX.Element {
   const [state, dispatch] = React.useReducer(ViewReducer, initialState);
   const createAction = useActionCreator<ViewActionType>(dispatch);
   const value = {
